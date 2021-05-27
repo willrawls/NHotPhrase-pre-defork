@@ -26,7 +26,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_", "_", "{767B190E-07E3-43
 		appveyor.yml = appveyor.yml
 		build.cmd = build.cmd
 		LICENSE.md = LICENSE.md
-		README.md = README.md
+		original README.md = original README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{90C6005F-8801-41EF-AE11-9B0C6483025E}"
