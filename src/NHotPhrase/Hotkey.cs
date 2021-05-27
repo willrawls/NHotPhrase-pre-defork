@@ -3,48 +3,31 @@ using System.Runtime.InteropServices;
 
 namespace NHotPhrase
 {
-    internal class Hotkey
+    public class Hotkey
     {
         private static int _nextId;
 
-        private readonly int _id;
-        private readonly uint _virtualKey;
-        private readonly HotkeyFlags _flags;
-        private readonly EventHandler<HotkeyEventArgs> _handler;
-
-        public Hotkey(uint virtualKey, HotkeyFlags flags, EventHandler<HotkeyEventArgs> handler)
+        public Hotkey(uint virtualKey, HotPhraseFlags flags, EventHandler<HotkeyEventArgs> handler)
         {
-            _id = ++_nextId;
-            _virtualKey = virtualKey;
-            _flags = flags;
-            _handler = handler;
+            Id = ++_nextId;
+            VirtualKey = virtualKey;
+            Flags = flags;
+            Handler = handler;
         }
 
-        public int Id
-        {
-            get { return _id; }
-        }
+        public int Id { get; }
 
-        public uint VirtualKey
-        {
-            get { return _virtualKey; }
-        }
+        public uint VirtualKey { get; }
 
-        public HotkeyFlags Flags
-        {
-            get { return _flags; }
-        }
+        public HotPhraseFlags Flags { get; }
 
-        public EventHandler<HotkeyEventArgs> Handler
-        {
-            get { return _handler; }
-        }
+        public EventHandler<HotkeyEventArgs> Handler { get; }
 
-        private IntPtr _hwnd;
+        public IntPtr WindowHandle;
 
-        public void Register(IntPtr hwnd, string name)
+        public void Register(IntPtr windowHandle, string name)
         {
-            if (!NativeMethods.RegisterHotKey(hwnd, _id, _flags, _virtualKey))
+            if (!NativeMethods.RegisterHotKey(windowHandle, Id, Flags, VirtualKey))
             {
                 var hr = Marshal.GetHRForLastWin32Error();
                 var ex = Marshal.GetExceptionForHR(hr);
@@ -52,20 +35,19 @@ namespace NHotPhrase
                     throw new HotkeyAlreadyRegisteredException(name, ex);
                 throw ex;
             }
-            _hwnd = hwnd;
+            WindowHandle = windowHandle;
         }
 
         public void Unregister()
         {
-            if (_hwnd != IntPtr.Zero)
+            if (WindowHandle == IntPtr.Zero) return;
+
+            if (!NativeMethods.UnregisterHotKey(WindowHandle, Id))
             {
-                if (!NativeMethods.UnregisterHotKey(_hwnd, _id))
-                {
-                    var hr = Marshal.GetHRForLastWin32Error();
-                    throw Marshal.GetExceptionForHR(hr);
-                }
-                _hwnd = IntPtr.Zero;
+                var hr = Marshal.GetHRForLastWin32Error();
+                throw Marshal.GetExceptionForHR(hr);
             }
+            WindowHandle = IntPtr.Zero;
         }
     }
 }

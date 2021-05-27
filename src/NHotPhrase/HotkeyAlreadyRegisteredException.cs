@@ -7,30 +7,25 @@ namespace NHotPhrase
     [Serializable]
     public class HotkeyAlreadyRegisteredException : Exception
     {
-        private readonly string _name;
-
         public HotkeyAlreadyRegisteredException(string name, Exception inner) : base(inner.Message, inner)
         {
-            _name = name;
+            Name = name;
             HResult = Marshal.GetHRForException(inner);
         }
 
-        protected HotkeyAlreadyRegisteredException(
+        public HotkeyAlreadyRegisteredException(
             SerializationInfo info,
             StreamingContext context) : base(info, context)
         {
-            _name = (string) info.GetValue("_name", typeof (string));
+            Name = (string) info.GetValue("_name", typeof (string));
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
-            info.AddValue("_name", _name);
+            info.AddValue("_name", Name);
         }
 
-        public string Name
-        {
-            get { return _name; }
-        }
+        public string Name { get; }
     }
 }

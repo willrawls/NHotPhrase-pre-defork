@@ -4,17 +4,12 @@ namespace NHotPhrase
 {
     public class HotkeyEventArgs : EventArgs
     {
-        private readonly string _name;
-
-        internal HotkeyEventArgs(string name)
+        public HotkeyEventArgs(string name)
         {
-            _name = name;
+            Name = name;
         }
 
-        public string Name
-        {
-            get { return _name; }
-        }
+        public string Name { get; }
 
         public bool Handled { get; set; }
     }

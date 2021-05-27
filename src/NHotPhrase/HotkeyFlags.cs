@@ -3,7 +3,7 @@
 namespace NHotPhrase
 {
     [Flags]
-    internal enum HotkeyFlags : uint
+    public enum HotPhraseFlags : uint
     {
         None = 0x0000,
         Alt = 0x0001,

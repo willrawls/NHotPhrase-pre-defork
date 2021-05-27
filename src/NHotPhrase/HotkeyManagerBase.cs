@@ -8,13 +8,13 @@ namespace NHotPhrase
         private readonly Dictionary<int, string> _hotkeyNames = new Dictionary<int, string>();
         private readonly Dictionary<string, Hotkey> _hotkeys = new Dictionary<string, Hotkey>();
         private IntPtr _hwnd;
-        internal static readonly IntPtr HwndMessage = (IntPtr)(-3);
+        public static readonly IntPtr HwndMessage = (IntPtr)(-3);
 
-        internal HotkeyManagerBase()
+        public HotkeyManagerBase()
         {
         }
 
-        internal void AddOrReplace(string name, uint virtualKey, HotkeyFlags flags, EventHandler<HotkeyEventArgs> handler)
+        public void AddOrReplace(string name, uint virtualKey, HotPhraseFlags flags, EventHandler<HotkeyEventArgs> handler)
         {
             var hotkey = new Hotkey(virtualKey, flags, handler);
             lock (_hotkeys)
@@ -44,14 +44,14 @@ namespace NHotPhrase
 
         public bool IsEnabled { get; set; } = true;
 
-        internal void SetHwnd(IntPtr hwnd)
+        public void SetHwnd(IntPtr hwnd)
         {
             _hwnd = hwnd;
         }
 
         private const int WmHotkey = 0x0312;
 
-        internal IntPtr HandleHotkeyMessage(
+        public IntPtr HandleHotkeyMessage(
             IntPtr hwnd,
             int msg,
             IntPtr wParam,

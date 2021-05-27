@@ -14,7 +14,7 @@ namespace NHotPhrase.Wpf
     {
         #region Singleton implementation
 
-        public static HotkeyManager Current { get { return LazyInitializer.Instance; } }
+        public static HotkeyManager Current => LazyInitializer.Instance;
 
         private static class LazyInitializer
         {
@@ -122,32 +122,32 @@ namespace NHotPhrase.Wpf
             AddOrReplace(name, vk, flags, handler);
         }
 
-        private static HotkeyFlags GetFlags(ModifierKeys modifiers, bool noRepeat)
+        private static HotPhraseFlags GetFlags(ModifierKeys modifiers, bool noRepeat)
         {
-            var flags = HotkeyFlags.None;
+            var flags = HotPhraseFlags.None;
             if (modifiers.HasFlag(ModifierKeys.Shift))
-                flags |= HotkeyFlags.Shift;
+                flags |= HotPhraseFlags.Shift;
             if (modifiers.HasFlag(ModifierKeys.Control))
-                flags |= HotkeyFlags.Control;
+                flags |= HotPhraseFlags.Control;
             if (modifiers.HasFlag(ModifierKeys.Alt))
-                flags |= HotkeyFlags.Alt;
+                flags |= HotPhraseFlags.Alt;
             if (modifiers.HasFlag(ModifierKeys.Windows))
-                flags |= HotkeyFlags.Windows;
+                flags |= HotPhraseFlags.Windows;
             if (noRepeat)
-                flags |= HotkeyFlags.NoRepeat;
+                flags |= HotPhraseFlags.NoRepeat;
             return flags;
         }
 
-        private static ModifierKeys GetModifiers(HotkeyFlags flags)
+        private static ModifierKeys GetModifiers(HotPhraseFlags flags)
         {
             var modifiers = ModifierKeys.None;
-            if (flags.HasFlag(HotkeyFlags.Shift))
+            if (flags.HasFlag(HotPhraseFlags.Shift))
                 modifiers |= ModifierKeys.Shift;
-            if (flags.HasFlag(HotkeyFlags.Control))
+            if (flags.HasFlag(HotPhraseFlags.Control))
                 modifiers |= ModifierKeys.Control;
-            if (flags.HasFlag(HotkeyFlags.Alt))
+            if (flags.HasFlag(HotPhraseFlags.Alt))
                 modifiers |= ModifierKeys.Alt;
-            if (flags.HasFlag(HotkeyFlags.Windows))
+            if (flags.HasFlag(HotPhraseFlags.Windows))
                 modifiers |= ModifierKeys.Windows;
             return modifiers;
         }

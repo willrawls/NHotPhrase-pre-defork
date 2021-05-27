@@ -6,9 +6,9 @@ namespace NHotPhrase
     static class NativeMethods
     {
         [DllImport("user32.dll", SetLastError = true)]
-        internal static extern bool RegisterHotKey(IntPtr hWnd, int id, HotkeyFlags fsModifiers, uint vk);
+        public static extern bool RegisterHotKey(IntPtr hWnd, int id, HotPhraseFlags fsModifiers, uint vk);
 
         [DllImport("user32.dll", SetLastError = true)]
-        internal static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+        public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
     }
 }

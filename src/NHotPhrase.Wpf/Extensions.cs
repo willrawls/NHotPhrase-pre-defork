@@ -9,7 +9,7 @@ namespace NHotPhrase.Wpf
             return (modifiers & flag) == flag;
         }
 
-        public static bool HasFlag(this HotkeyFlags flags, HotkeyFlags flag)
+        public static bool HasFlag(this HotPhraseFlags flags, HotPhraseFlags flag)
         {
             return (flags & flag) == flag;
         }

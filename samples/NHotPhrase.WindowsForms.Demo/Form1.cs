@@ -33,7 +33,7 @@ namespace NHotPhrase.WindowsForms.Demo
 
         private int Value
         {
-            get { return _value; }
+            get => _value;
             set
             {
                 _value = value;

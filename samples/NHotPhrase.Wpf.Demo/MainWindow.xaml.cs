@@ -45,7 +45,7 @@ namespace NHotPhrase.Wpf.Demo
         private int _value;
         public int Value
         {
-            get { return _value; }
+            get => _value;
             set
             {
                 _value = value;
@@ -54,16 +54,10 @@ namespace NHotPhrase.Wpf.Demo
         }
 
         private DelegateCommand _negateCommand;
-        public ICommand NegateCommand
-        {
-            get { return _negateCommand ?? (_negateCommand = new DelegateCommand(Negate)); }
-        }
+        public ICommand NegateCommand => _negateCommand ?? (_negateCommand = new DelegateCommand(Negate));
 
         private DelegateCommand _testCommand;
-        public ICommand TestCommand
-        {
-            get { return _testCommand ?? (_testCommand = new DelegateCommand(Test)); }
-        }
+        public ICommand TestCommand => _testCommand ?? (_testCommand = new DelegateCommand(Test));
 
         public string IncrementHotkey => IncrementGesture.GetDisplayStringForCulture(null);
         public string DecrementHotkey => DecrementGesture.GetDisplayStringForCulture(null);
@@ -88,7 +82,7 @@ namespace NHotPhrase.Wpf.Demo
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             var handler = PropertyChanged;
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
@@ -118,8 +112,8 @@ namespace NHotPhrase.Wpf.Demo
 
         public event EventHandler CanExecuteChanged
         {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
+            add => CommandManager.RequerySuggested += value;
+            remove => CommandManager.RequerySuggested -= value;
         }
     }
 }

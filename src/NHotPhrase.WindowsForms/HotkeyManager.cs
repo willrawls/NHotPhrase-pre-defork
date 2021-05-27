@@ -11,9 +11,9 @@ namespace NHotPhrase.WindowsForms
     {
         #region Singleton implementation
 
-        public static HotPhraseManager Current { get { return LazyInitializer.Instance; } }
+        public static HotPhraseManager Current => LazyInitializer.Instance;
 
-        private static class LazyInitializer
+        public static class LazyInitializer
         {
             static LazyInitializer() { }
             public static readonly HotPhraseManager Instance = new HotPhraseManager();
@@ -22,12 +22,12 @@ namespace NHotPhrase.WindowsForms
         #endregion
 
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
-        private readonly MessageWindow _messageWindow;
+        public readonly PhraseMessageWindow PhraseMessageWindow;
 
-        private HotPhraseManager()
+        public HotPhraseManager()
         {
-            _messageWindow = new MessageWindow(this);
-            SetHwnd(_messageWindow.Handle);
+            PhraseMessageWindow = new PhraseMessageWindow(this);
+            SetHwnd(PhraseMessageWindow.Handle);
         }
 
         public void AddOrReplace(string name, Keys keys, bool noRepeat, EventHandler<HotkeyEventArgs> handler)
@@ -42,50 +42,21 @@ namespace NHotPhrase.WindowsForms
             AddOrReplace(name, keys, false, handler);
         }
 
-        private static HotkeyFlags GetFlags(Keys hotkey, bool noRepeat)
+        public static HotPhraseFlags GetFlags(Keys hotkey, bool noRepeat)
         {
             var noMod = hotkey & ~Keys.Modifiers;
-            var flags = HotkeyFlags.None;
+            var flags = HotPhraseFlags.None;
             if (hotkey.HasFlag(Keys.Alt))
-                flags |= HotkeyFlags.Alt;
+                flags |= HotPhraseFlags.Alt;
             if (hotkey.HasFlag(Keys.Control))
-                flags |= HotkeyFlags.Control;
+                flags |= HotPhraseFlags.Control;
             if (hotkey.HasFlag(Keys.Shift))
-                flags |= HotkeyFlags.Shift;
+                flags |= HotPhraseFlags.Shift;
             if (noMod == Keys.LWin || noMod == Keys.RWin)
-                flags |= HotkeyFlags.Windows;
+                flags |= HotPhraseFlags.Windows;
             if (noRepeat)
-                flags |= HotkeyFlags.NoRepeat;
+                flags |= HotPhraseFlags.NoRepeat;
             return flags;
-        }
-
-        class MessageWindow : ContainerControl
-        {
-            private readonly HotPhraseManager _hotPhraseManager;
-
-            public MessageWindow(HotPhraseManager hotPhraseManager)
-            {
-                _hotPhraseManager = hotPhraseManager;
-            }
-
-            protected override CreateParams CreateParams
-            {
-                get
-                {
-                    var parameters = base.CreateParams;
-                    parameters.Parent = HwndMessage;
-                    return parameters;
-                }
-            }
-
-            protected override void WndProc(ref Message m)
-            {
-                bool handled = false;
-                Hotkey hotkey;
-                m.Result = _hotPhraseManager.HandleHotkeyMessage(Handle, m.Msg, m.WParam, m.LParam, ref handled, out hotkey);
-                if (!handled)
-                    base.WndProc(ref m);
-            }
         }
     }
 }
