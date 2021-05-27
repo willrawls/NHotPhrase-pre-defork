@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
@@ -11,38 +10,35 @@ namespace NHotPhrase.Wpf.Demo
     /// </summary>
     public partial class MainWindow : INotifyPropertyChanged
     {
-        private static readonly KeyGesture IncrementGesture = new KeyGesture(Key.Up, ModifierKeys.Control | ModifierKeys.Alt);
-        private static readonly KeyGesture DecrementGesture = new KeyGesture(Key.Down, ModifierKeys.Control | ModifierKeys.Alt);
+        public static readonly KeyGesture IncrementGesture = new KeyGesture(Key.Up, ModifierKeys.Control | ModifierKeys.Alt);
+        public static readonly KeyGesture DecrementGesture = new KeyGesture(Key.Down, ModifierKeys.Control | ModifierKeys.Alt);
 
         public MainWindow()
         {
-            HotkeyManager.HotkeyAlreadyRegistered += HotkeyManager_HotkeyAlreadyRegistered;
+            HotPhraseManager.HotPhraseAlreadyRegistered += HotPhraseManagerHotPhraseAlreadyRegistered;
 
-            HotkeyManager.Current.AddOrReplace("Increment", IncrementGesture, OnIncrement);
-            HotkeyManager.Current.AddOrReplace("Decrement", DecrementGesture, OnDecrement);
-
-            InitializeComponent();
-            DataContext = this;
+            HotPhraseManager.Current.AddOrReplace("Increment", IncrementGesture, OnIncrement);
+            HotPhraseManager.Current.AddOrReplace("Decrement", DecrementGesture, OnDecrement);
         }
 
-        private void HotkeyManager_HotkeyAlreadyRegistered(object sender, HotkeyAlreadyRegisteredEventArgs e)
+        public void HotPhraseManagerHotPhraseAlreadyRegistered(object sender, HotkeyAlreadyRegisteredEventArgs e)
         {
-            MessageBox.Show(string.Format("The hotkey {0} is already registered by another application", e.Name));
+            MessageBox.Show($"The hotkey {e.Name} is already registered by another application");
         }
 
-        private void OnIncrement(object sender, HotkeyEventArgs e)
+        public void OnIncrement(object sender, HotPhraseEventArgs e)
         {
             Value++;
             e.Handled = true;
         }
 
-        private void OnDecrement(object sender, HotkeyEventArgs e)
+        public void OnDecrement(object sender, HotPhraseEventArgs e)
         {
             Value--;
             e.Handled = true;
         }
 
-        private int _value;
+        public int _value;
         public int Value
         {
             get => _value;
@@ -53,28 +49,28 @@ namespace NHotPhrase.Wpf.Demo
             }
         }
 
-        private DelegateCommand _negateCommand;
-        public ICommand NegateCommand => _negateCommand ?? (_negateCommand = new DelegateCommand(Negate));
+        public DelegateCommand _negateCommand;
+        public ICommand NegateCommand => _negateCommand ??= new DelegateCommand(Negate);
 
-        private DelegateCommand _testCommand;
-        public ICommand TestCommand => _testCommand ?? (_testCommand = new DelegateCommand(Test));
+        public DelegateCommand _testCommand;
+        public ICommand TestCommand => _testCommand ??= new DelegateCommand(Test);
 
         public string IncrementHotkey => IncrementGesture.GetDisplayStringForCulture(null);
         public string DecrementHotkey => DecrementGesture.GetDisplayStringForCulture(null);
 
         public bool IsHotkeyManagerEnabled
         {
-            get => HotkeyManager.Current.IsEnabled;
-            set => HotkeyManager.Current.IsEnabled = value;
+            get => HotPhraseManager.Current.IsEnabled;
+            set => HotPhraseManager.Current.IsEnabled = value;
         }
 
-        private void Test()
+        public void Test()
         {
             MessageBox.Show("Test");
         }
 
 
-        private void Negate()
+        public void Negate()
         {
             Value = -Value;
         }
@@ -86,34 +82,6 @@ namespace NHotPhrase.Wpf.Demo
         {
             var handler = PropertyChanged;
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-    }
-
-    class DelegateCommand : ICommand
-    {
-        private readonly Action _execute;
-        private readonly Func<bool> _canExecute;
-
-        public DelegateCommand(Action execute, Func<bool> canExecute = null)
-        {
-            _execute = execute;
-            _canExecute = canExecute;
-        }
-
-        public bool CanExecute(object parameter)
-        {
-            return _canExecute == null || _canExecute();
-        }
-
-        public void Execute(object parameter)
-        {
-            _execute();
-        }
-
-        public event EventHandler CanExecuteChanged
-        {
-            add => CommandManager.RequerySuggested += value;
-            remove => CommandManager.RequerySuggested -= value;
         }
     }
 }

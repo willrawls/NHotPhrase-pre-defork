@@ -1,10 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net40;net45;netcoreapp3.0</TargetFrameworks>
+    <TargetFrameworks>net5.0-windows</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup Label="Package properties">
     <Description>A managed library to handle global hotkeys in Windows Forms and WPF applications. NOTE: this package doesn't contain a concrete HotkeyManager implementation; you should add either the NHotPhrase.Wpf or NHotPhrase.WindowsForms package to get one.</Description>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="HotPhraseManagerBase.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms">
+      <HintPath>C:\Windows\Microsoft.NET\Framework\v4.0.30319\System.Windows.Forms.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 
 </Project>

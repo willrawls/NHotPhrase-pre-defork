@@ -5,10 +5,10 @@ using System.Linq;
 
 namespace NHotPhrase.Wpf
 {
-    class WeakReferenceCollection<T> : IEnumerable<T>
+    public class WeakReferenceCollection<T> : IEnumerable<T>
         where T : class
     {
-        private readonly List<WeakReference> _references = new List<WeakReference>();
+        public readonly List<WeakReference> _references = new List<WeakReference>();
         
         public IEnumerator<T> GetEnumerator()
         {

@@ -5,9 +5,9 @@ namespace NHotPhrase
 {
     public class Hotkey
     {
-        private static int _nextId;
+        public static int _nextId;
 
-        public Hotkey(uint virtualKey, HotPhraseFlags flags, EventHandler<HotkeyEventArgs> handler)
+        public Hotkey(uint virtualKey, HotPhraseFlags flags, EventHandler<HotPhraseEventArgs> handler)
         {
             Id = ++_nextId;
             VirtualKey = virtualKey;
@@ -21,7 +21,7 @@ namespace NHotPhrase
 
         public HotPhraseFlags Flags { get; }
 
-        public EventHandler<HotkeyEventArgs> Handler { get; }
+        public EventHandler<HotPhraseEventArgs> Handler { get; }
 
         public IntPtr WindowHandle;
 

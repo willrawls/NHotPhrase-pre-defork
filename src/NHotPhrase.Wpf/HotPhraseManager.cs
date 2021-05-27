@@ -10,16 +10,16 @@ namespace NHotPhrase.Wpf
         "Microsoft.Design",
         "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable",
         Justification = "This is a singleton; disposing it would break it")]
-    public class HotkeyManager : HotkeyManagerBase
+    public class HotPhraseManager : HotPhraseManagerBase
     {
         #region Singleton implementation
 
-        public static HotkeyManager Current => LazyInitializer.Instance;
+        public static HotPhraseManager Current => LazyInitializer.Instance;
 
-        private static class LazyInitializer
+        public static class LazyInitializer
         {
             static LazyInitializer() { }
-            public static readonly HotkeyManager Instance = new HotkeyManager();
+            public static readonly HotPhraseManager Instance = new HotPhraseManager();
         }
 
         #endregion
@@ -41,19 +41,19 @@ namespace NHotPhrase.Wpf
             DependencyProperty.RegisterAttached(
                 "RegisterGlobalHotkey",
                 typeof(bool),
-                typeof(HotkeyManager),
+                typeof(HotPhraseManager),
                 new PropertyMetadata(
                     false,
                     RegisterGlobalHotkeyPropertyChanged));
 
-        private static void RegisterGlobalHotkeyPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        public static void RegisterGlobalHotkeyPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var keyBinding = d as KeyBinding;
             if (keyBinding == null)
                 return;
 
-            bool oldValue = (bool) e.OldValue;
-            bool newValue = (bool) e.NewValue;
+            var oldValue = (bool) e.OldValue;
+            var newValue = (bool) e.NewValue;
 
             if (DesignerProperties.GetIsInDesignMode(d))
                 return;
@@ -72,11 +72,11 @@ namespace NHotPhrase.Wpf
 
         #region HotkeyAlreadyRegistered event
 
-        public static event EventHandler<HotkeyAlreadyRegisteredEventArgs> HotkeyAlreadyRegistered;
+        public static event EventHandler<HotkeyAlreadyRegisteredEventArgs> HotPhraseAlreadyRegistered;
 
-        private static void ONHotPhraseAlreadyRegistered(string name)
+        public static void ONHotPhraseAlreadyRegistered(string name)
         {
-            var handler = HotkeyAlreadyRegistered;
+            var handler = HotPhraseAlreadyRegistered;
             if (handler != null)
                 handler(null, new HotkeyAlreadyRegisteredEventArgs(name));
         }
@@ -84,45 +84,45 @@ namespace NHotPhrase.Wpf
         #endregion
 
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
-        private readonly HwndSource _source;
-        private readonly WeakReferenceCollection<KeyBinding> _keyBindings;
+        public readonly HwndSource _source;
+        public readonly WeakReferenceCollection<KeyBinding> _keyBindings;
 
-        private HotkeyManager()
+        public HotPhraseManager()
         {
             _keyBindings = new WeakReferenceCollection<KeyBinding>();
 
             var parameters = new HwndSourceParameters("Hotkey sink")
                              {
                                  HwndSourceHook = HandleMessage,
-                                 ParentWindow = HwndMessage
+                                 ParentWindow = WindowMessage
                              };
             _source = new HwndSource(parameters);
             SetHwnd(_source.Handle);
         }
 
-        public void AddOrReplace(string name, KeyGesture gesture, EventHandler<HotkeyEventArgs> handler)
+        public void AddOrReplace(string name, KeyGesture gesture, EventHandler<HotPhraseEventArgs> handler)
         {
             AddOrReplace(name, gesture, false, handler);
         }
 
-        public void AddOrReplace(string name, KeyGesture gesture, bool noRepeat, EventHandler<HotkeyEventArgs> handler)
+        public void AddOrReplace(string name, KeyGesture gesture, bool noRepeat, EventHandler<HotPhraseEventArgs> handler)
         {
             AddOrReplace(name, gesture.Key, gesture.Modifiers, noRepeat, handler);
         }
 
-        public void AddOrReplace(string name, Key key, ModifierKeys modifiers, EventHandler<HotkeyEventArgs> handler)
+        public void AddOrReplace(string name, Key key, ModifierKeys modifiers, EventHandler<HotPhraseEventArgs> handler)
         {
             AddOrReplace(name, key, modifiers, false, handler);
         }
 
-        public void AddOrReplace(string name, Key key, ModifierKeys modifiers, bool noRepeat, EventHandler<HotkeyEventArgs> handler)
+        public void AddOrReplace(string name, Key key, ModifierKeys modifiers, bool noRepeat, EventHandler<HotPhraseEventArgs> handler)
         {
             var flags = GetFlags(modifiers, noRepeat);
             var vk = (uint)KeyInterop.VirtualKeyFromKey(key);
             AddOrReplace(name, vk, flags, handler);
         }
 
-        private static HotPhraseFlags GetFlags(ModifierKeys modifiers, bool noRepeat)
+        public static HotPhraseFlags GetFlags(ModifierKeys modifiers, bool noRepeat)
         {
             var flags = HotPhraseFlags.None;
             if (modifiers.HasFlag(ModifierKeys.Shift))
@@ -138,7 +138,7 @@ namespace NHotPhrase.Wpf
             return flags;
         }
 
-        private static ModifierKeys GetModifiers(HotPhraseFlags flags)
+        public static ModifierKeys GetModifiers(HotPhraseFlags flags)
         {
             var modifiers = ModifierKeys.None;
             if (flags.HasFlag(HotPhraseFlags.Shift))
@@ -152,10 +152,10 @@ namespace NHotPhrase.Wpf
             return modifiers;
         }
 
-        private void AddKeyBinding(KeyBinding keyBinding)
+        public void AddKeyBinding(KeyBinding keyBinding)
         {
             var gesture = (KeyGesture)keyBinding.Gesture;
-            string name = GetNameForKeyBinding(gesture);
+            var name = GetNameForKeyBinding(gesture);
             try
             {
                 AddOrReplace(name, gesture.Key, gesture.Modifiers, null);
@@ -167,24 +167,24 @@ namespace NHotPhrase.Wpf
             }
         }
 
-        private void RemoveKeyBinding(KeyBinding keyBinding)
+        public void RemoveKeyBinding(KeyBinding keyBinding)
         {
             var gesture = (KeyGesture)keyBinding.Gesture;
-            string name = GetNameForKeyBinding(gesture);
+            var name = GetNameForKeyBinding(gesture);
             Remove(name);
             _keyBindings.Remove(keyBinding);
         }
 
-        private readonly KeyGestureConverter _gestureConverter = new KeyGestureConverter();
-        private string GetNameForKeyBinding(KeyGesture gesture)
+        public readonly KeyGestureConverter _gestureConverter = new KeyGestureConverter();
+        public string GetNameForKeyBinding(KeyGesture gesture)
         {
-            string name = gesture.DisplayString;
+            var name = gesture.DisplayString;
             if (string.IsNullOrEmpty(name))
                 name = _gestureConverter.ConvertToString(gesture);
             return name;
         }
 
-        private IntPtr HandleMessage(IntPtr hwnd, int msg, IntPtr wparam, IntPtr lparam, ref bool handled)
+        public IntPtr HandleMessage(IntPtr hwnd, int msg, IntPtr wparam, IntPtr lparam, ref bool handled)
         {
             Hotkey hotkey;
             var result = HandleHotkeyMessage(hwnd, msg, wparam, lparam, ref handled, out hotkey);
@@ -197,11 +197,11 @@ namespace NHotPhrase.Wpf
             return result;
         }
 
-        private bool ExecuteBoundCommand(Hotkey hotkey)
+        public bool ExecuteBoundCommand(Hotkey hotkey)
         {
             var key = KeyInterop.KeyFromVirtualKey((int)hotkey.VirtualKey);
             var modifiers = GetModifiers(hotkey.Flags);
-            bool handled = false;
+            var handled = false;
             foreach (var binding in _keyBindings)
             {
                 if (binding.Key == key && binding.Modifiers == modifiers)
@@ -212,7 +212,7 @@ namespace NHotPhrase.Wpf
             return handled;
         }
 
-        private static bool ExecuteCommand(InputBinding binding)
+        public static bool ExecuteCommand(InputBinding binding)
         {
             var command = binding.Command;
             var parameter = binding.CommandParameter;

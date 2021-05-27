@@ -35,12 +35,12 @@ namespace build
 
             Directory.SetCurrentDirectory(GetSolutionDirectory());
 
-            string artifactsDir = Path.GetFullPath("artifacts");
-            string logsDir = Path.Combine(artifactsDir, "logs");
-            string buildLogFile = Path.Combine(logsDir, "build.binlog");
-            string packagesDir = Path.Combine(artifactsDir, "packages");
+            var artifactsDir = Path.GetFullPath("artifacts");
+            var logsDir = Path.Combine(artifactsDir, "logs");
+            var buildLogFile = Path.Combine(logsDir, "build.binlog");
+            var packagesDir = Path.Combine(artifactsDir, "packages");
 
-            string solutionFile = "NHotPhrase.sln";
+            var solutionFile = "NHotPhrase.sln";
 
             Target(
                 "artifactDirectories",
@@ -70,9 +70,9 @@ namespace build
             RunTargetsWithoutExiting(RemainingArguments);
         }
 
-        private static string GetSolutionDirectory() =>
+        public static string GetSolutionDirectory() =>
             Path.GetFullPath(Path.Combine(GetScriptDirectory(), @"..\.."));
 
-        private static string GetScriptDirectory([CallerFilePath] string filename = null) => Path.GetDirectoryName(filename);
+        public static string GetScriptDirectory([CallerFilePath] string filename = null) => Path.GetDirectoryName(filename);
     }
 }

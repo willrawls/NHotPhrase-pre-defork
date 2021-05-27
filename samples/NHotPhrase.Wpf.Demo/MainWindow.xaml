@@ -4,9 +4,9 @@
         Title="MainWindow" Height="300" Width="300">
     <Window.InputBindings>
         <KeyBinding Gesture="Ctrl+Alt+N" Command="{Binding NegateCommand}"
-                    HotkeyManager.RegisterGlobalHotkey="True" />
+                    HotPhraseManager.RegisterGlobalHotkey="True" />
         <KeyBinding Gesture="Ctrl+Alt+T" Command="{Binding TestCommand}"
-                    HotkeyManager.RegisterGlobalHotkey="True" />
+                    HotPhraseManager.RegisterGlobalHotkey="True" />
     </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>

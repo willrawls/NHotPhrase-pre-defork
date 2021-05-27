@@ -7,7 +7,7 @@ namespace NHotPhrase.WindowsForms
         "Microsoft.Design",
         "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable",
         Justification = "This is a singleton; disposing it would break it")]
-    public class HotPhraseManager : HotkeyManagerBase
+    public class HotPhraseManager : HotPhraseManagerBase
     {
         #region Singleton implementation
 
@@ -30,14 +30,14 @@ namespace NHotPhrase.WindowsForms
             SetHwnd(PhraseMessageWindow.Handle);
         }
 
-        public void AddOrReplace(string name, Keys keys, bool noRepeat, EventHandler<HotkeyEventArgs> handler)
+        public void AddOrReplace(string name, Keys keys, bool noRepeat, EventHandler<HotPhraseEventArgs> handler)
         {
             var flags = GetFlags(keys, noRepeat);
             var vk = unchecked((uint)(keys & ~Keys.Modifiers));
             AddOrReplace(name, vk, flags, handler);
         }
 
-        public void AddOrReplace(string name, Keys keys, EventHandler<HotkeyEventArgs> handler)
+        public void AddOrReplace(string name, Keys keys, EventHandler<HotPhraseEventArgs> handler)
         {
             AddOrReplace(name, keys, false, handler);
         }

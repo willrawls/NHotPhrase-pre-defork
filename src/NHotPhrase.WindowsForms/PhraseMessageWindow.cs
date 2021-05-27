@@ -16,14 +16,14 @@ namespace NHotPhrase.WindowsForms
             get
             {
                 var parameters = base.CreateParams;
-                parameters.Parent = HotkeyManagerBase.HwndMessage;
+                parameters.Parent = HotPhraseManagerBase.WindowMessage;
                 return parameters;
             }
         }
 
         protected override void WndProc(ref Message m)
         {
-            bool handled = false;
+            var handled = false;
             Hotkey hotkey;
             m.Result = _hotPhraseManager.HandleHotkeyMessage(Handle, m.Msg, m.WParam, m.LParam, ref handled, out hotkey);
             if (!handled)

@@ -35,13 +35,13 @@ as long as it's unique;
 when this hotkey is pressed. For instance:
 
 ```csharp
-    private void OnIncrement(object sender, HotkeyEventArgs e)
+    public void OnIncrement(object sender, HotkeyEventArgs e)
     {
         Value++;
         e.Handled = true;
     }
 
-    private void OnDecrement(object sender, HotkeyEventArgs e)
+    public void OnDecrement(object sender, HotkeyEventArgs e)
     {
         Value--;
         e.Handled = true;
@@ -52,7 +52,7 @@ If you want to handle several hotkeys with the same handler, you can check the `
 property of the `HotkeyEventArgs`:
 
 ```csharp
-    private void OnIncrementOrDecrement(object sender, HotkeyEventArgs e)
+    public void OnIncrementOrDecrement(object sender, HotkeyEventArgs e)
     {
         switch (e.Name)
         {

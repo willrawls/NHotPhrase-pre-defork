@@ -2,9 +2,9 @@
 
 namespace NHotPhrase
 {
-    public class HotkeyEventArgs : EventArgs
+    public class HotPhraseEventArgs : EventArgs
     {
-        public HotkeyEventArgs(string name)
+        public HotPhraseEventArgs(string name)
         {
             Name = name;
         }
