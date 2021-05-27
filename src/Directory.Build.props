@@ -1,13 +1,13 @@
 <Project>
 
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)NHotkey.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)NHotPhrase.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
 
   <PropertyGroup Label="Package properties">
     <Authors>Thomas Levesque</Authors>
-    <PackageProjectUrl>https://github.com/thomaslevesque/NHotkey</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/thomaslevesque/NHotPhrase</PackageProjectUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageTags>global;hotkey;windows</PackageTags>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>

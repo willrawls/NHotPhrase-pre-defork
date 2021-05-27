@@ -1,24 +1,24 @@
-NHotkey
+NHotPhrase
 =======
 
-[![NuGet version](https://img.shields.io/nuget/v/NHotkey.svg?logo=nuget&label=NHotkey)](https://www.nuget.org/packages/NHotkey)
-[![NuGet version](https://img.shields.io/nuget/v/NHotkey.Wpf.svg?logo=nuget&label=NHotkey.Wpf)](https://www.nuget.org/packages/NHotkey.Wpf)
-[![NuGet version](https://img.shields.io/nuget/v/NHotkey.WindowsForms.svg?logo=nuget&label=NHotkey.WindowsForms)](https://www.nuget.org/packages/NHotkey.WindowsForms)
-[![AppVeyor build](https://img.shields.io/appveyor/ci/thomaslevesque/nhotkey.svg?logo=appveyor&logoColor=cccccc)](https://ci.appveyor.com/project/thomaslevesque/nhotkey)
+[![NuGet version](https://img.shields.io/nuget/v/NHotPhrase.svg?logo=nuget&label=NHotPhrase)](https://www.nuget.org/packages/NHotPhrase)
+[![NuGet version](https://img.shields.io/nuget/v/NHotPhrase.Wpf.svg?logo=nuget&label=NHotPhrase.Wpf)](https://www.nuget.org/packages/NHotPhrase.Wpf)
+[![NuGet version](https://img.shields.io/nuget/v/NHotPhrase.WindowsForms.svg?logo=nuget&label=NHotPhrase.WindowsForms)](https://www.nuget.org/packages/NHotPhrase.WindowsForms)
+[![AppVeyor build](https://img.shields.io/appveyor/ci/thomaslevesque/NHotPhrase.svg?logo=appveyor&logoColor=cccccc)](https://ci.appveyor.com/project/thomaslevesque/NHotPhrase)
 
 Easily handle shortcut keys even when your WPF or WinForms app doesn't have focus. Declare hotkeys in XAML with the familiar `KeyBinding` syntax.
 
 Nuget packages:
-- for WPF: [NHotkey.Wpf](http://www.nuget.org/packages/NHotkey.Wpf/)
-- for Windows Forms: [NHotkey.WindowsForms](http://www.nuget.org/packages/NHotkey.WindowsForms/)
+- for WPF: [NHotPhrase.Wpf](http://www.nuget.org/packages/NHotPhrase.Wpf/)
+- for Windows Forms: [NHotPhrase.WindowsForms](http://www.nuget.org/packages/NHotPhrase.WindowsForms/)
 
 ### Windows Forms usage
 
-Add a reference to `NHotkey.dll` and `NHotkey.WindowsForms.dll`. In the file where you want to
-handle hotkeys, import the `NHotkey.WindowsForms` namespace:
+Add a reference to `NHotPhrase.dll` and `NHotPhrase.WindowsForms.dll`. In the file where you want to
+handle hotkeys, import the `NHotPhrase.WindowsForms` namespace:
 
 ```csharp
-    using NHotkey.WindowsForms;
+    using NHotPhrase.WindowsForms;
 ```
 
 During initialization, add some hotkeys:
@@ -73,11 +73,11 @@ The approach for WPF is very similar to the one for Windows Forms; the exposed A
 different to account for the differences between WinForms and WPF. The WPF version also
 supports `KeyBindings`.
 
-Add a reference to `NHotkey.dll` and `NHotkey.Wpf.dll`. In the file where you want to
-handle hotkeys, import the `NHotkey.Wpf` namespace:
+Add a reference to `NHotPhrase.dll` and `NHotPhrase.Wpf.dll`. In the file where you want to
+handle hotkeys, import the `NHotPhrase.Wpf` namespace:
 
 ```csharp
-    using NHotkey.Wpf;
+    using NHotPhrase.Wpf;
 ```
 
 During initialization, add some hotkeys:

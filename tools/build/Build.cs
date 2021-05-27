@@ -40,7 +40,7 @@ namespace build
             string buildLogFile = Path.Combine(logsDir, "build.binlog");
             string packagesDir = Path.Combine(artifactsDir, "packages");
 
-            string solutionFile = "NHotkey.sln";
+            string solutionFile = "NHotPhrase.sln";
 
             Target(
                 "artifactDirectories",
