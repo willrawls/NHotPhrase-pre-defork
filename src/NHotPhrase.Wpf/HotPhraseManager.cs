@@ -10,7 +10,7 @@ namespace NHotPhrase.Wpf
         "Microsoft.Design",
         "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable",
         Justification = "This is a singleton; disposing it would break it")]
-    public class HotPhraseManager : HotPhraseManagerBase
+    public class HotPhraseManager
     {
         #region Singleton implementation
 

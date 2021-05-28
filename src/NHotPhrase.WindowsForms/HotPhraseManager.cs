@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
+using NHotPhrase.Keyboard;
 
 namespace NHotPhrase.WindowsForms
 {
@@ -7,56 +10,71 @@ namespace NHotPhrase.WindowsForms
         "Microsoft.Design",
         "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable",
         Justification = "This is a singleton; disposing it would break it")]
-    public class HotPhraseManager : HotPhraseManagerBase
+    public class HotPhraseManager : IDisposable
     {
-        #region Singleton implementation
-
-        public static HotPhraseManager Current => LazyInitializer.Instance;
-
-        public static class LazyInitializer
+        private static HotPhraseManager _current;
+        public static HotPhraseManager Current
         {
-            static LazyInitializer() { }
-            public static readonly HotPhraseManager Instance = new HotPhraseManager();
+            get => _current ??= new HotPhraseManager(DefaultOnKeyPressed);
+            set => throw new NotImplementedException();
         }
 
-        #endregion
-
-        // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
-        public readonly PhraseMessageWindow PhraseMessageWindow;
-
-        public HotPhraseManager()
+        private static void DefaultOnKeyPressed(object sender, GlobalKeyboardHookEventArgs e)
         {
-            PhraseMessageWindow = new PhraseMessageWindow(this);
-            SetHwnd(PhraseMessageWindow.Handle);
         }
 
-        public void AddOrReplace(string name, Keys keys, bool noRepeat, EventHandler<HotPhraseEventArgs> handler)
+        public GlobalKeyboardHook Hook { get; set; }
+        public TriggerList Triggers { get; set; } = new();
+
+        public HotPhraseManager(EventHandler<GlobalKeyboardHookEventArgs> keyboardPressedEvent = null)
         {
-            var flags = GetFlags(keys, noRepeat);
-            var vk = unchecked((uint)(keys & ~Keys.Modifiers));
-            AddOrReplace(name, vk, flags, handler);
+
+            Hook = new GlobalKeyboardHook(keyboardPressedEvent ?? DefaultOnKeyPressed);
         }
 
-        public void AddOrReplace(string name, Keys keys, EventHandler<HotPhraseEventArgs> handler)
+        public HotPhraseManager CallEachTimeKeyIsPressed(EventHandler<GlobalKeyboardHookEventArgs> keyEventHandler)
         {
-            AddOrReplace(name, keys, false, handler);
+            if (keyEventHandler == null)
+                throw new ArgumentNullException(nameof(keyEventHandler));
+
+            Hook.KeyboardPressedEvent += keyEventHandler;
+            return this;
         }
 
-        public static HotPhraseFlags GetFlags(Keys hotkey, bool noRepeat)
+        public HotPhraseManager AddOrReplace(string name, Keys[] keys, EventHandler<HotPhraseEventArgs> hotPhraseEventArgs)
         {
-            var noMod = hotkey & ~Keys.Modifiers;
-            var flags = HotPhraseFlags.None;
-            if (hotkey.HasFlag(Keys.Alt))
-                flags |= HotPhraseFlags.Alt;
-            if (hotkey.HasFlag(Keys.Control))
-                flags |= HotPhraseFlags.Control;
-            if (hotkey.HasFlag(Keys.Shift))
-                flags |= HotPhraseFlags.Shift;
-            if (noMod == Keys.LWin || noMod == Keys.RWin)
-                flags |= HotPhraseFlags.Windows;
-            if (noRepeat)
-                flags |= HotPhraseFlags.NoRepeat;
-            return flags;
+            return AddOrReplace(new HotPhraseKeySequence(name, keys, hotPhraseEventArgs));
         }
+
+        public HotPhraseManager AddOrReplace(HotPhraseKeySequence hotPhraseKeySequence)
+        {
+            var existingPhraseKeySequence = Triggers.FirstOrDefault(x => x.Name.Equals(hotPhraseKeySequence.Name, StringComparison.InvariantCultureIgnoreCase));
+            if (existingPhraseKeySequence != null)
+                Triggers.Remove(existingPhraseKeySequence);
+            Triggers.Add(hotPhraseKeySequence);
+            return this;
+        }
+
+        public static HotPhraseManager ReinitializeCurrent()
+        {
+            Current.Dispose();
+            Current = new HotPhraseManager(DefaultOnKeyPressed);
+            return Current;
+        }
+
+        public static void StopListening()
+        {
+            Current.Dispose();
+            Current = null;
+        }
+
+        public void Dispose()
+        {
+            Hook?.Dispose();
+        }
+    }
+
+    public class TriggerList : List<HotPhraseKeySequence>
+    {
     }
 }

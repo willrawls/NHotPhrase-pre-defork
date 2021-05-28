@@ -22,7 +22,7 @@ namespace NHotPhrase.Keyboard
         /// <param name="dwThreadId">thread identifier</param>
         /// <returns>If the function succeeds, the return value is the handle to the hook procedure.</returns>
         [DllImport("USER32", SetLastError = true)]
-        public static extern IntPtr SetWindowsHookEx(int idHook, GlobalKeyboardHook.HookProc lpfn, IntPtr hMod, int dwThreadId);
+        public static extern IntPtr SetWindowsHookEx(int idHook, GlobalKeyboardHook.HookProcDelegate lpfn, IntPtr hMod, int dwThreadId);
 
         /// <summary>
         ///     The UnhookWindowsHookEx function removes a hook procedure installed in a hook chain by the SetWindowsHookEx
@@ -44,5 +44,11 @@ namespace NHotPhrase.Keyboard
         /// <returns>If the function succeeds, the return value is true.</returns>
         [DllImport("USER32", SetLastError = true)]
         public static extern IntPtr CallNextHookEx(IntPtr hHook, int code, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern bool RegisterHotKey(IntPtr hWnd, int id, HotPhraseFlags fsModifiers, uint vk);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
     }
 }

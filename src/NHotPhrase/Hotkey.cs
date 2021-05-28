@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using NHotPhrase.Keyboard;
 
 namespace NHotPhrase
 {
@@ -27,7 +28,7 @@ namespace NHotPhrase
 
         public void Register(IntPtr windowHandle, string name)
         {
-            if (!NativeMethods.RegisterHotKey(windowHandle, Id, Flags, VirtualKey))
+            if (!Win32.RegisterHotKey(windowHandle, Id, Flags, VirtualKey))
             {
                 var hr = Marshal.GetHRForLastWin32Error();
                 var ex = Marshal.GetExceptionForHR(hr);
@@ -42,7 +43,7 @@ namespace NHotPhrase
         {
             if (WindowHandle == IntPtr.Zero) return;
 
-            if (!NativeMethods.UnregisterHotKey(WindowHandle, Id))
+            if (!Win32.UnregisterHotKey(WindowHandle, Id))
             {
                 var hr = Marshal.GetHRForLastWin32Error();
                 throw Marshal.GetExceptionForHR(hr);

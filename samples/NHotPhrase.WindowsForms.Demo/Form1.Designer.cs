@@ -31,11 +31,11 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.label4 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.chkEnableGlobalHotkeys = new System.Windows.Forms.CheckBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -77,12 +77,12 @@
             // 
             this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(161, 78);
+            this.label4.Location = new System.Drawing.Point(213, 80);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(294, 20);
+            this.label4.Size = new System.Drawing.Size(242, 20);
             this.label4.TabIndex = 1;
-            this.label4.Text = "Caps Lock, Caps Lock, Backslash, Backspace";
+            this.label4.Text = "Caps Lock, Caps Lock, D, Backspace";
             // 
             // label2
             // 
@@ -95,16 +95,38 @@
             this.label2.TabIndex = 1;
             this.label2.Text = "Decrement";
             // 
+            // label6
+            // 
+            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(246, 22);
+            this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(209, 20);
+            this.label6.TabIndex = 0;
+            this.label6.Text = "Right Ctrl, Right Ctrl, Right Ctrl";
+            // 
             // label3
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(282, 50);
+            this.label3.Location = new System.Drawing.Point(360, 51);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(173, 20);
+            this.label3.Size = new System.Drawing.Size(95, 20);
             this.label3.TabIndex = 0;
-            this.label3.Text = "Ctrl, Ctrl, Shift, Shift, Shift";
+            this.label3.Text = "Ctrl, Shift, Alt";
+            // 
+            // label5
+            // 
+            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(8, 22);
+            this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(181, 20);
+            this.label5.TabIndex = 0;
+            this.label5.Text = "Toggle Global HotPhrases";
             // 
             // label1
             // 
@@ -129,28 +151,6 @@
             this.chkEnableGlobalHotkeys.Text = "Global hotkeys enabled";
             this.chkEnableGlobalHotkeys.UseVisualStyleBackColor = true;
             this.chkEnableGlobalHotkeys.CheckedChanged += new System.EventHandler(this.chkEnableGlobalHotkeys_CheckedChanged);
-            // 
-            // label5
-            // 
-            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(8, 22);
-            this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(181, 20);
-            this.label5.TabIndex = 0;
-            this.label5.Text = "Toggle Global HotPhrases";
-            // 
-            // label6
-            // 
-            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(246, 22);
-            this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(209, 20);
-            this.label6.TabIndex = 0;
-            this.label6.Text = "Right Ctrl, Right Ctrl, Right Ctrl";
             // 
             // Form1
             // 
@@ -180,9 +180,9 @@
         public System.Windows.Forms.Label label3;
         public System.Windows.Forms.Label label1;
         public System.Windows.Forms.CheckBox chkEnableGlobalHotkeys;
-        public System.ComponentModel.IContainer components;
         public System.Windows.Forms.Label label6;
         public System.Windows.Forms.Label label5;
+        private System.ComponentModel.IContainer components;
     }
 }
 

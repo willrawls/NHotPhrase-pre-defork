@@ -15,7 +15,7 @@ namespace NHotPhrase.WindowsForms.Tests
             var hotPhrase = new HotPhraseSequence
             {
                 Name = "RightControlRightControlRightControl",
-                KeySequence = KeySequence.As().WhenKeyRepeats(Keys.RControlKey, 3),
+                HotPhraseKeySequence = HotPhraseKeySequence.Named().WhenKeyRepeats(Keys.RControlKey, 3),
                 Handler = new EventHandler<HotPhraseEventArgs>((sender, e) => e.Handled = true),
             };
 

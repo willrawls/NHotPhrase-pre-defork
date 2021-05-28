@@ -7,6 +7,9 @@
     <Description>A managed library to handle global hotkeys in Windows Forms applications. This package contains the concrete HotkeyManager implementation for Windows Forms.</Description>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="PhraseMessageWindow.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\NHotPhrase\NHotPhrase.csproj" />
   </ItemGroup>
 </Project>
