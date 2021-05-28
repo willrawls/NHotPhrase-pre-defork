@@ -6,23 +6,25 @@ namespace NHotPhrase.Keyboard
 {
     public class PhraseAction
     {
-        public PhraseActions Parent;
+        public HotPhraseKeySequence Parent;
         public EventHandler<HotPhraseEventArgs> Handler;
         public List<Keys> KeysToSend;
         public int MillisecondPauseBetweenKeys = 2;
 
-        public PhraseAction(PhraseActions parent)
+        public PhraseAction(HotPhraseKeySequence parent, EventHandler<HotPhraseEventArgs> handler = null)
         {
             Parent = parent;
+            if (handler != null)
+                ThenCall(handler);
         }
 
-        public PhraseActions ThenCall(EventHandler<HotPhraseEventArgs> handler)
+        public HotPhraseKeySequence ThenCall(EventHandler<HotPhraseEventArgs> handler)
         {
             Handler = handler;
             return Parent;
         }
 
-        public PhraseActions RunNow(PhraseActionRunState phraseActionRunState)
+        public HotPhraseKeySequence RunNow(PhraseActionRunState phraseActionRunState)
         {
             if (Handler != null)
             {

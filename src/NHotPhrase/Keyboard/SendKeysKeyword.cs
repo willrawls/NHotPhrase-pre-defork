@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace NHotPhrase.Keyboard
@@ -74,5 +75,123 @@ namespace NHotPhrase.Keyboard
             Name = name;
             Number = number;
         }
-   }
+
+        public static bool IsAMatch(Keys exactingKey, Keys simplifiableKey)
+        {
+            if (IsExacting(exactingKey))
+            {
+                return exactingKey == simplifiableKey;
+            }
+            return Simplified(exactingKey) == Simplified(simplifiableKey);
+        }
+
+        // If they user says for instance "LShiftKey" then it has to be the left shift key. But "ShiftKey" means either of the shift keys
+        public static bool IsExacting(Keys key)
+        {
+            switch(key)  
+            {
+                case Keys.LShiftKey:
+                case Keys.RShiftKey:
+                case Keys.RControlKey:
+                case Keys.LControlKey:
+                case Keys.LMenu:
+                case Keys.RMenu:
+                case Keys.LWin:
+                case Keys.RWin:
+                case Keys.NumPad0:
+                case Keys.NumPad1:
+                case Keys.NumPad2:
+                case Keys.NumPad3:
+                case Keys.NumPad4:
+                case Keys.NumPad5:
+                case Keys.NumPad6:
+                case Keys.NumPad7:
+                case Keys.NumPad8:
+                case Keys.NumPad9:
+                    return true;
+            }
+
+            return false;
+        }
+
+        public static Keys Simplified(Keys key)
+        {
+            switch(key)
+            {
+                case Keys.Return:
+                    return Keys.Enter; // Enter returns itself
+
+                case Keys.Shift:
+                case Keys.ShiftKey:
+                case Keys.LShiftKey:
+                case Keys.RShiftKey:
+                    return Keys.ShiftKey;
+
+                case Keys.Control:
+                case Keys.ControlKey:
+                case Keys.RControlKey:
+                case Keys.LControlKey:
+                    return Keys.Control;
+
+                case Keys.Alt:
+                case Keys.LMenu:
+                case Keys.RMenu:
+                    return Keys.Alt;
+
+                case Keys.LWin:
+                case Keys.RWin:
+                    return Keys.LWin;
+
+                case Keys.D0:
+                case Keys.NumPad0:
+                    return Keys.D0;
+
+                case Keys.D1:
+                case Keys.NumPad1:
+                    return Keys.D1;
+
+                case Keys.D2:
+                case Keys.NumPad2:
+                    return Keys.D2;
+
+                case Keys.D3:
+                case Keys.NumPad3:
+                    return Keys.D3;
+
+                case Keys.D4:
+                case Keys.NumPad4:
+                    return Keys.D4;
+
+                case Keys.D5:
+                case Keys.NumPad5:
+                    return Keys.D5;
+
+                case Keys.D6:
+                case Keys.NumPad6:
+                    return Keys.D6;
+
+                case Keys.D7:
+                case Keys.NumPad7:
+                    return Keys.D7;
+
+                case Keys.D8:
+                case Keys.NumPad8:
+                    return Keys.D8;
+
+                case Keys.D9:
+                case Keys.NumPad9:
+                    return Keys.D9;
+                
+                case Keys.Oemplus:
+                case Keys.Add:
+                    return Keys.Oemplus;
+
+                case Keys.OemMinus:
+                case Keys.Separator:
+                    return Keys.OemMinus;
+            }
+
+            return key;
+        }
+    }
 }

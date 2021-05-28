@@ -12,22 +12,25 @@ namespace NHotPhrase.WindowsForms.Tests
         [TestMethod]
         public void RightControlRightControlRightControl()
         {
-            var hotPhrase = new HotPhraseSequence
-            {
-                Name = "RightControlRightControlRightControl",
-                HotPhraseKeySequence = HotPhraseKeySequence.Named().WhenKeyRepeats(Keys.RControlKey, 3),
-                Handler = new EventHandler<HotPhraseEventArgs>((sender, e) => e.Handled = true),
-            };
+            var keys = new Keys[] {Keys.ControlKey, Keys.ControlKey, Keys.ControlKey};
+            var hotPhrase = new HotPhraseKeySequence(
+                "RightControlRightControlRightControl",
+                keys,
+                (sender, e) => e.Handled = true);
+
 
             HotPhraseManager.Current.AddOrReplace(hotPhrase);
+            
+            Assert.IsNotNull(HotPhraseManager.Current.Triggers[0].Sequence);
+            Assert.AreEqual(3, HotPhraseManager.Current.Triggers[0].Sequence.Count);
+            Assert.AreEqual(Keys.ControlKey, HotPhraseManager.Current.Triggers[0].Sequence[0]);
+            Assert.AreEqual(Keys.ControlKey, HotPhraseManager.Current.Triggers[0].Sequence[1]);
+            Assert.AreEqual(Keys.ControlKey, HotPhraseManager.Current.Triggers[0].Sequence[2]);
+            
+            Assert.IsNotNull(HotPhraseManager.Current.Triggers[0].Actions[0].Handler);
+            var hotPhraseEventArgs = new HotPhraseEventArgs("Frank");
+            HotPhraseManager.Current.Triggers[0].Actions[0].Handler(null, hotPhraseEventArgs);
+            Assert.IsTrue(hotPhraseEventArgs.Handled);
         }
-
-        public void AddOrReplace(string name, Keys keys, bool noRepeat, EventHandler<HotPhraseEventArgs> handler)
-        {
-            var flags = GetFlags(keys, noRepeat);
-            var vk = unchecked((uint)(keys & ~Keys.Modifiers));
-            AddOrReplace(name, vk, flags, handler);
-        }
-
     }
 }

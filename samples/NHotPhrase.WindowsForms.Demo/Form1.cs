@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using NHotPhrase.Keyboard;
 
 namespace NHotPhrase.WindowsForms.Demo
@@ -13,7 +14,6 @@ namespace NHotPhrase.WindowsForms.Demo
         public Form1()
         {
             InitializeComponent();
-
             chkEnableGlobalHotkeys.Checked = true;
         }
 
@@ -23,7 +23,7 @@ namespace NHotPhrase.WindowsForms.Demo
                 HotPhraseKeySequence
                     .Named("Toggle phrase activation")
                     .WhenKeyRepeats(Keys.RControlKey, 3)
-                    .Call(OnTogglePhraseActivation)
+                    .ThenCall(OnTogglePhraseActivation)
             );
 
             HotPhraseManager.Current.AddOrReplace(
@@ -32,7 +32,7 @@ namespace NHotPhrase.WindowsForms.Demo
                     .WhenKeyPressed(Keys.ControlKey)
                     .ThenKeyPressed(Keys.Shift)
                     .ThenKeyPressed(Keys.Alt)
-                    .Call(OnIncrement)
+                    .ThenCall(OnIncrement)
             );
 
             // Spell it out long hand
@@ -43,7 +43,7 @@ namespace NHotPhrase.WindowsForms.Demo
                     .ThenKeyPressed(Keys.CapsLock)
                     .ThenKeyPressed(Keys.D)
                     .ThenKeyPressed(Keys.Back)
-                    .Call(OnDecrement)
+                    .ThenCall(OnDecrement)
             );
 
             // Or use the NHotkey like syntax 
@@ -51,18 +51,9 @@ namespace NHotPhrase.WindowsForms.Demo
                 OnDecrement);
         }
 
-        private void OnTogglePhraseActivation(object? sender, HotPhraseEventArgs e)
+        private void OnTogglePhraseActivation(object sender, HotPhraseEventArgs e)
         {
-            chkEnableGlobalHotkeys.Checked = !chkEnableGlobalHotkeys.Checked;
-
-            if (chkEnableGlobalHotkeys.Checked)
-            {
-                SetupHotPhrases();
-            }
-            else
-            {
-                HotPhraseManager.StopListening();
-            }
+            chkEnableGlobalHotkeys_CheckedChanged(sender, null);
         }
 
         public void OnIncrement(object sender, HotPhraseEventArgs e)
@@ -87,9 +78,24 @@ namespace NHotPhrase.WindowsForms.Demo
             }
         }
 
+        public delegate void fred(object sender, System.EventArgs e);
         public void chkEnableGlobalHotkeys_CheckedChanged(object sender, System.EventArgs e)
         {
-            HotPhraseManager.Current.IsEnabled = chkEnableGlobalHotkeys.Checked;
+            if (InvokeRequired)
+            {
+                Invoke(new fred(chkEnableGlobalHotkeys_CheckedChanged), null, null);
+                return;
+            }
+            chkEnableGlobalHotkeys.Checked = !chkEnableGlobalHotkeys.Checked;
+
+            if (chkEnableGlobalHotkeys.Checked)
+            {
+                SetupHotPhrases();
+            }
+            else
+            {
+                HotPhraseManager.StopListening();
+            }
         }
 
         public void panel1_Paint(object sender, PaintEventArgs e)

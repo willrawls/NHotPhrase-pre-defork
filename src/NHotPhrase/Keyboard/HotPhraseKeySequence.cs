@@ -15,7 +15,7 @@ namespace NHotPhrase.Keyboard
         {
             Name = name;
             Sequence.AddRange(keys);
-            Call(hotPhraseEventArgs);
+            ThenCall(hotPhraseEventArgs);
         }
 
         public HotPhraseKeySequence()
@@ -64,16 +64,16 @@ namespace NHotPhrase.Keyboard
                     Sequence.Count);
 
             for (var i = 0; i < Sequence.Count; i++)
-                if (Sequence[i] != keyPressHistoryClone.History[i])
+                if(!SendKeysKeyword.IsAMatch(Sequence[i], keyPressHistoryClone.History[i]))
                     return false;
 
             return true;
         }
 
-        public HotPhraseKeySequence Call(EventHandler<HotPhraseEventArgs> handler)
+        public HotPhraseKeySequence ThenCall(EventHandler<HotPhraseEventArgs> handler)
         {
-            Actions.Add(new PhraseAction()
-                .ThenCall(handler));
+            var sequence = new PhraseAction(this, handler);
+            Actions.Add(sequence);
             return this;
         }
 

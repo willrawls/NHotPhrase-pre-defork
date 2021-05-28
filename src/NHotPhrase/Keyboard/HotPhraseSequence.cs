@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 
 namespace NHotPhrase.Keyboard
 {
@@ -8,4 +8,4 @@ namespace NHotPhrase.Keyboard
         public HotPhraseKeySequence HotPhraseKeySequence { get; set; }
         public EventHandler<HotPhraseEventArgs> Handler { get; set; }
     }
-}
+}*/
