@@ -92,21 +92,28 @@ namespace NHotPhrase.Keyboard
             
             if (Enum.IsDefined(typeof(KeyboardState), keyboardStateAsInt))
             {
-                var o = Marshal.PtrToStructure(lParam, typeof(LowLevelKeyboardInputEvent));
-                if (o != null)
+                var rawLowLevelKeyboardInputEvent = Marshal.PtrToStructure(lParam, typeof(LowLevelKeyboardInputEvent));
+                if (rawLowLevelKeyboardInputEvent != null)
                 {
-                    var lowLevelKeyboardInputEvent = (LowLevelKeyboardInputEvent) o;
+                    var lowLevelKeyboardInputEvent = (LowLevelKeyboardInputEvent) rawLowLevelKeyboardInputEvent;
                     var eventArguments = new GlobalKeyboardHookEventArgs(lowLevelKeyboardInputEvent, (KeyboardState) keyboardStateAsInt);
-                    
-                    var handler = KeyboardPressedEvent;
-                    handler?.Invoke(this, eventArguments);
-                    keystrokeWasHandled = eventArguments.Handled;
+                    keystrokeWasHandled = HandleKeyEvent(lowLevelKeyboardInputEvent, eventArguments);
                 }
             }
 
             return keystrokeWasHandled 
                 ? (IntPtr) 1 
                 : Win32.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
+        }
+
+        public bool HandleKeyEvent(LowLevelKeyboardInputEvent lowLevelKeyboardInputEvent, GlobalKeyboardHookEventArgs eventArguments)
+        {
+            if (KeyboardPressedEvent == null)
+                return false;
+
+            var handler = KeyboardPressedEvent;
+            handler?.Invoke(this, eventArguments);
+            return eventArguments.Handled;
         }
 
         public void Dispose()

@@ -64,7 +64,7 @@ namespace NHotPhrase.Keyboard
                     Sequence.Count);
 
             for (var i = 0; i < Sequence.Count; i++)
-                if(!SendKeysKeyword.IsAMatch(Sequence[i], keyPressHistoryClone.History[i]))
+                if(!SendKeysKeyword.IsAMatch(Sequence[i], possibleMatchRange[i]))
                     return false;
 
             return true;

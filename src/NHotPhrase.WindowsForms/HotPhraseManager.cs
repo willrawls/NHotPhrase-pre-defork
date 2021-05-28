@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using NHotPhrase.Keyboard;
 
@@ -12,24 +12,27 @@ namespace NHotPhrase.WindowsForms
         Justification = "This is a singleton; disposing it would break it")]
     public class HotPhraseManager : IDisposable
     {
-        private static HotPhraseManager _current;
-        public static HotPhraseManager Current
-        {
-            get => _current ??= new HotPhraseManager(DefaultOnKeyPressed);
-            set => throw new NotImplementedException();
-        }
-
-        private static void DefaultOnKeyPressed(object sender, GlobalKeyboardHookEventArgs e)
-        {
-        }
-
         public GlobalKeyboardHook Hook { get; set; }
         public TriggerList Triggers { get; set; } = new();
 
+        private static HotPhraseManager _current;
+        public static HotPhraseManager Current
+        {
+            get => _current ??= new HotPhraseManager(DefaultDoNothingOnKeyPressed);
+            set
+            {
+                _current?.Dispose();
+                _current = value;
+            }
+        }
+
+        private static void DefaultDoNothingOnKeyPressed(object sender, GlobalKeyboardHookEventArgs e)
+        {
+        }
+
         public HotPhraseManager(EventHandler<GlobalKeyboardHookEventArgs> keyboardPressedEvent = null)
         {
-
-            Hook = new GlobalKeyboardHook(keyboardPressedEvent ?? DefaultOnKeyPressed);
+            Hook = new GlobalKeyboardHook(keyboardPressedEvent ?? DefaultDoNothingOnKeyPressed);
         }
 
         public HotPhraseManager CallEachTimeKeyIsPressed(EventHandler<GlobalKeyboardHookEventArgs> keyEventHandler)
@@ -58,7 +61,7 @@ namespace NHotPhrase.WindowsForms
         public static HotPhraseManager ReinitializeCurrent()
         {
             Current.Dispose();
-            Current = new HotPhraseManager(DefaultOnKeyPressed);
+            Current = new HotPhraseManager(DefaultDoNothingOnKeyPressed);
             return Current;
         }
 
@@ -72,9 +75,5 @@ namespace NHotPhrase.WindowsForms
         {
             Hook?.Dispose();
         }
-    }
-
-    public class TriggerList : List<HotPhraseKeySequence>
-    {
     }
 }
