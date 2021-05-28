@@ -7,9 +7,8 @@ using static SimpleExec.Command;
 
 namespace build
 {
-    [Command(ThrowOnUnexpectedArgument = false)]
     [SuppressDefaultHelpOption]
-    class Build
+    public class Build
     {
         static void Main(string[] args) =>
             CommandLineApplication.Execute<Build>(args);

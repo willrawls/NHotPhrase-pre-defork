@@ -15,8 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\NHotPhrase.WindowsForms\NHotPhrase.WindowsForms.csproj" />
-    <ProjectReference Include="..\src\NHotPhrase\NHotPhrase.csproj" />
+    <ProjectReference Include="..\NHotPhrase.WindowsForms\NHotPhrase.WindowsForms.csproj" />
+    <ProjectReference Include="..\NHotPhrase\NHotPhrase.csproj" />
   </ItemGroup>
 
 </Project>
