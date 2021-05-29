@@ -142,6 +142,8 @@
             // chkEnableGlobalHotkeys
             // 
             this.chkEnableGlobalHotkeys.AutoSize = true;
+            this.chkEnableGlobalHotkeys.Checked = true;
+            this.chkEnableGlobalHotkeys.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkEnableGlobalHotkeys.Dock = System.Windows.Forms.DockStyle.Top;
             this.chkEnableGlobalHotkeys.Location = new System.Drawing.Point(0, 0);
             this.chkEnableGlobalHotkeys.Margin = new System.Windows.Forms.Padding(2);

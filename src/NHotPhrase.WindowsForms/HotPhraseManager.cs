@@ -15,24 +15,12 @@ namespace NHotPhrase.WindowsForms
         public GlobalKeyboardHook Hook { get; set; }
         public TriggerList Triggers { get; set; } = new();
 
-        private static HotPhraseManager _current;
-        public static HotPhraseManager Current
+        public HotPhraseManager(EventHandler<GlobalKeyboardHookEventArgs> keyboardPressedEvent)
         {
-            get => _current ??= new HotPhraseManager(DefaultDoNothingOnKeyPressed);
-            set
-            {
-                _current?.Dispose();
-                _current = value;
-            }
-        }
-
-        private static void DefaultDoNothingOnKeyPressed(object sender, GlobalKeyboardHookEventArgs e)
-        {
-        }
-
-        public HotPhraseManager(EventHandler<GlobalKeyboardHookEventArgs> keyboardPressedEvent = null)
-        {
-            Hook = new GlobalKeyboardHook(keyboardPressedEvent ?? DefaultDoNothingOnKeyPressed);
+            if (keyboardPressedEvent == null)
+                throw new ArgumentNullException(nameof(keyboardPressedEvent));
+            
+            Hook = new GlobalKeyboardHook(keyboardPressedEvent);
         }
 
         public HotPhraseManager CallEachTimeKeyIsPressed(EventHandler<GlobalKeyboardHookEventArgs> keyEventHandler)
@@ -56,19 +44,6 @@ namespace NHotPhrase.WindowsForms
                 Triggers.Remove(existingPhraseKeySequence);
             Triggers.Add(hotPhraseKeySequence);
             return this;
-        }
-
-        public static HotPhraseManager ReinitializeCurrent()
-        {
-            Current.Dispose();
-            Current = new HotPhraseManager(DefaultDoNothingOnKeyPressed);
-            return Current;
-        }
-
-        public static void StopListening()
-        {
-            Current.Dispose();
-            Current = null;
         }
 
         public void Dispose()

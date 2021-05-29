@@ -8,25 +8,30 @@ namespace NHotPhrase.WindowsForms.Demo
     {
         public static readonly Keys IncrementKeys = Keys.Control | Keys.Alt | Keys.Up;
         public static readonly Keys DecrementKeys = Keys.Control | Keys.Alt | Keys.Down;
-
         public int _value;
+
+        public HotPhraseManager HotPhraseManager { get; set; }
 
         public Form1()
         {
             InitializeComponent();
-            chkEnableGlobalHotkeys.Checked = true;
+            SetupHotPhrases();
         }
 
         private void SetupHotPhrases()
         {
-            HotPhraseManager.Current.AddOrReplace(
+            HotPhraseManager?.Dispose();
+            HotPhraseManager = new DemoHotPhraseManager();
+
+
+            HotPhraseManager.AddOrReplace(
                 HotPhraseKeySequence
                     .Named("Toggle phrase activation")
                     .WhenKeyRepeats(Keys.RControlKey, 3)
                     .ThenCall(OnTogglePhraseActivation)
             );
 
-            HotPhraseManager.Current.AddOrReplace(
+            HotPhraseManager.AddOrReplace(
                 HotPhraseKeySequence
                     .Named("Increment")
                     .WhenKeyPressed(Keys.ControlKey)
@@ -36,7 +41,7 @@ namespace NHotPhrase.WindowsForms.Demo
             );
 
             // Spell it out long hand
-            HotPhraseManager.Current.AddOrReplace(
+            HotPhraseManager.AddOrReplace(
                 HotPhraseKeySequence
                     .Named("Decrement")
                     .WhenKeyPressed(Keys.CapsLock)
@@ -47,8 +52,7 @@ namespace NHotPhrase.WindowsForms.Demo
             );
 
             // Or use the NHotkey like syntax 
-            HotPhraseManager.Current.AddOrReplace("Decrement", new[] {Keys.CapsLock, Keys.CapsLock, Keys.D, Keys.Back},
-                OnDecrement);
+            HotPhraseManager.AddOrReplace("Decrement", new[] {Keys.CapsLock, Keys.CapsLock, Keys.D, Keys.Back}, OnDecrement);
         }
 
         private void OnTogglePhraseActivation(object sender, HotPhraseEventArgs e)
@@ -94,7 +98,8 @@ namespace NHotPhrase.WindowsForms.Demo
             }
             else
             {
-                HotPhraseManager.StopListening();
+                HotPhraseManager?.Dispose();
+                HotPhraseManager = null;
             }
         }
 
@@ -102,5 +107,17 @@ namespace NHotPhrase.WindowsForms.Demo
         {
 
         }
+    }
+
+    public class DemoHotPhraseManager : HotPhraseManager
+    {
+        public EventHandler<GlobalKeyboardHookEventArgs> KeyboardPressedEvent { get; set; }
+
+        public DemoHotPhraseManager(EventHandler<GlobalKeyboardHookEventArgs> keyboardPressedEvent) : base(keyboardPressedEvent)
+        {
+            KeyboardPressedEvent = keyboardPressedEvent;
+        }
+
+        
     }
 }
