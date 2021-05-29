@@ -60,15 +60,15 @@ namespace NHotPhrase.WindowsForms.Tests
         {
             var hotPhraseManager = HotPhraseManager(out var hotPhrase);
             
-            Assert.IsNotNull(hotPhraseManager.KeyUpTriggers[0].Sequence);
-            Assert.AreEqual(3, hotPhraseManager.KeyUpTriggers[0].Sequence.Count);
-            Assert.AreEqual(Keys.ControlKey, hotPhraseManager.KeyUpTriggers[0].Sequence[0]);
-            Assert.AreEqual(Keys.ControlKey, hotPhraseManager.KeyUpTriggers[0].Sequence[1]);
-            Assert.AreEqual(Keys.ControlKey, hotPhraseManager.KeyUpTriggers[0].Sequence[2]);
+            Assert.IsNotNull(hotPhraseManager.Triggers[0].Sequence);
+            Assert.AreEqual(3, hotPhraseManager.Triggers[0].Sequence.Count);
+            Assert.AreEqual(Keys.ControlKey, hotPhraseManager.Triggers[0].Sequence[0]);
+            Assert.AreEqual(Keys.ControlKey, hotPhraseManager.Triggers[0].Sequence[1]);
+            Assert.AreEqual(Keys.ControlKey, hotPhraseManager.Triggers[0].Sequence[2]);
             
-            Assert.IsNotNull(hotPhraseManager.KeyUpTriggers[0].Actions[0].Handler);
+            Assert.IsNotNull(hotPhraseManager.Triggers[0].Actions[0].Handler);
             var hotPhraseEventArgs = new HotPhraseEventArgs(null, null);
-            hotPhraseManager.KeyUpTriggers[0].Actions[0].Handler(null, hotPhraseEventArgs);
+            hotPhraseManager.Triggers[0].Actions[0].Handler(null, hotPhraseEventArgs);
             Assert.IsTrue(hotPhraseEventArgs.Handled);
         }
     }

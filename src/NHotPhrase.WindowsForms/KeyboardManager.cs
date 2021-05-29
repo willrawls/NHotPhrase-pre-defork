@@ -9,7 +9,7 @@ namespace NHotPhrase.WindowsForms
     public class KeyboardManager : IDisposable
     {
         public GlobalKeyboardHook Hook { get; set; }
-        public TriggerList KeyUpTriggers { get; set; } = new();
+        public TriggerList Triggers { get; set; } = new();
 
         public KeyboardManager()
         {
@@ -33,14 +33,14 @@ namespace NHotPhrase.WindowsForms
 
         public KeyboardManager AddOrReplace(HotPhraseKeySequence hotPhraseKeySequence)
         {
-            var existingPhraseKeySequence = KeyUpTriggers
+            var existingPhraseKeySequence = Triggers
                 .FirstOrDefault(x => x.Name
                     .Equals(hotPhraseKeySequence.Name,
                         StringComparison.InvariantCultureIgnoreCase));
 
             if (existingPhraseKeySequence != null)
-                KeyUpTriggers.Remove(existingPhraseKeySequence);
-            KeyUpTriggers.Add(hotPhraseKeySequence);
+                Triggers.Remove(existingPhraseKeySequence);
+            Triggers.Add(hotPhraseKeySequence);
             return this;
         }
 

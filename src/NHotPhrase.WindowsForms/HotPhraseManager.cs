@@ -25,7 +25,7 @@ namespace NHotPhrase.WindowsForms
             {
                 Debug.WriteLine($"Key {e.KeyboardData.Key}");
                 History.AddKeyPress(e.KeyboardData.Key);
-                var trigger = Keyboard.KeyUpTriggers.FirstMatch(History);
+                var trigger = Keyboard.Triggers.FirstMatch(History);
                 if (trigger == null)
                     return;
 
