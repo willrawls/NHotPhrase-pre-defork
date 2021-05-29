@@ -10,7 +10,8 @@ namespace NHotPhrase.WindowsForms.Tests
     [TestClass]
     public class TriggerTests
     {
-        public static Keys[] RControl3Times = new[] {Keys.ControlKey, Keys.ControlKey, Keys.ControlKey};
+        public static Keys[] RControl3Times = new[] {Keys.RControlKey, Keys.RControlKey, Keys.RControlKey};
+        public static Keys[] Shift3Times = new[] {Keys.Shift, Keys.Shift, Keys.Shift};
 
         [TestMethod]
         public void RControl3Times_IsAMatch_True()
@@ -27,6 +28,23 @@ namespace NHotPhrase.WindowsForms.Tests
                 Keys.RControlKey,
                 Keys.RControlKey,
                 Keys.RControlKey,
+            };
+            var keyPressHistoryClone = new KeyHistory(8, 8, DateTime.Now, history);
+            var actual = data.IsAMatch(keyPressHistoryClone);
+
+            Assert.IsTrue(actual);
+        }
+
+        [TestMethod]
+        public void Shift3Times3Times_IsAMatch_True()
+        {
+            var data = new HotPhraseKeySequence("Fred", Shift3Times, (sender, args) => args.Handled = true);
+
+            var history = new List<Keys>
+            {
+                Keys.LShiftKey,
+                Keys.RShiftKey,
+                Keys.ShiftKey,
             };
             var keyPressHistoryClone = new KeyHistory(8, 8, DateTime.Now, history);
             var actual = data.IsAMatch(keyPressHistoryClone);

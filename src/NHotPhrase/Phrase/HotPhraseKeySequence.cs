@@ -65,7 +65,9 @@ namespace NHotPhrase.Phrase
             if (keyList.Count < Sequence.Count)
                 return false;
 
-            var possibleMatchRange = keyList.GetRange(keyList.Count - Sequence.Count, Sequence.Count);
+            var possibleMatchRange = keyList.Count == Sequence.Count
+                ? keyList
+                : keyList.GetRange(keyList.Count - Sequence.Count, Sequence.Count);
 
             return !Sequence
                 .Where((t, i) => !SendKeysKeyword
