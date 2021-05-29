@@ -69,10 +69,13 @@ namespace NHotPhrase.Phrase
                 ? keyList
                 : keyList.GetRange(keyList.Count - Sequence.Count, Sequence.Count);
 
-            return !Sequence
-                .Where((t, i) => !SendKeysKeyword
-                    .IsAMatch(t, possibleMatchRange[i]))
-                .Any();
+            for (var i = 0; i < Sequence.Count; i++)
+            {
+                if (!SendKeysKeyword.IsAMatch(Sequence[i], possibleMatchRange[i]))
+                    return false;
+            }
+
+            return true;
         }
 
         public HotPhraseKeySequence ThenCall(EventHandler<HotPhraseEventArgs> handler)
