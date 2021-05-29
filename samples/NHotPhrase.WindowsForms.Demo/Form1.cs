@@ -10,7 +10,7 @@ namespace NHotPhrase.WindowsForms.Demo
         public static readonly Keys DecrementKeys = Keys.Control | Keys.Alt | Keys.Down;
         public int _value;
 
-        public WindowsFormHotPhraseManager HotPhraseManager { get; set; }
+        public HotPhraseManager Manager { get; set; }
 
         public Form1()
         {
@@ -20,17 +20,17 @@ namespace NHotPhrase.WindowsForms.Demo
 
         private void SetupHotPhrases()
         {
-            HotPhraseManager?.Dispose();
-            HotPhraseManager = new WindowsFormHotPhraseManager(this);
+            Manager?.Dispose();
+            Manager = new HotPhraseManager(this);
 
-            HotPhraseManager.Current.AddOrReplace(
+            Manager.Watcher.AddOrReplace(
                 HotPhraseKeySequence
                     .Named("Toggle phrase activation")
                     .WhenKeyRepeats(Keys.RControlKey, 3)
                     .ThenCall(OnTogglePhraseActivation)
             );
 
-            HotPhraseManager.Current.AddOrReplace(
+            Manager.Watcher.AddOrReplace(
                 HotPhraseKeySequence
                     .Named("Increment")
                     .WhenKeyPressed(Keys.ControlKey)
@@ -40,7 +40,7 @@ namespace NHotPhrase.WindowsForms.Demo
             );
 
             // Spell it out long hand
-            HotPhraseManager.Current.AddOrReplace(
+            Manager.Watcher.AddOrReplace(
                 HotPhraseKeySequence
                     .Named("Decrement")
                     .WhenKeyPressed(Keys.CapsLock)
@@ -51,7 +51,7 @@ namespace NHotPhrase.WindowsForms.Demo
             );
 
             // Or use the NHotkey like syntax 
-            HotPhraseManager.Current.AddOrReplace("Decrement", new[] {Keys.CapsLock, Keys.CapsLock, Keys.D, Keys.Back}, OnDecrement);
+            Manager.Watcher.AddOrReplace("Decrement", new[] {Keys.CapsLock, Keys.CapsLock, Keys.D, Keys.Back}, OnDecrement);
         }
 
         private void OnTogglePhraseActivation(object sender, HotPhraseEventArgs e)
@@ -97,8 +97,8 @@ namespace NHotPhrase.WindowsForms.Demo
             }
             else
             {
-                HotPhraseManager?.Dispose();
-                HotPhraseManager = null;
+                Manager?.Dispose();
+                Manager = null;
             }
         }
     }

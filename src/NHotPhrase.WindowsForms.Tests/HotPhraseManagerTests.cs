@@ -66,7 +66,7 @@ namespace NHotPhrase.WindowsForms.Tests
             Assert.AreEqual(Keys.ControlKey, hotPhraseManager.Triggers[0].Sequence[2]);
             
             Assert.IsNotNull(hotPhraseManager.Triggers[0].Actions[0].Handler);
-            var hotPhraseEventArgs = new HotPhraseEventArgs("Frank");
+            var hotPhraseEventArgs = new HotPhraseEventArgs(null, null);
             hotPhraseManager.Triggers[0].Actions[0].Handler(null, hotPhraseEventArgs);
             Assert.IsTrue(hotPhraseEventArgs.Handled);
         }

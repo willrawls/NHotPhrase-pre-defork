@@ -23,7 +23,7 @@ namespace NHotPhrase.Keyboard
             History.AddRange(history);
         }
 
-        public KeyPressHistory AddToHistory(Keys key)
+        public KeyPressHistory Add(Keys key)
         {
             // If too much time has gone by, clear the queue
             if (DateTime.Now.Subtract(LastPressAt).Seconds > ClearAfterThisManySeconds)

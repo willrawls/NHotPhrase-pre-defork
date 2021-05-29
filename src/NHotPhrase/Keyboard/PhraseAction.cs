@@ -24,19 +24,21 @@ namespace NHotPhrase.Keyboard
             return Parent;
         }
 
-        public HotPhraseKeySequence RunNow(PhraseActionRunState phraseActionRunState)
+        public bool RunNow(PhraseActionRunState phraseActionRunState)
         {
             if (Handler != null)
             {
-                var hotPhraseEventArgs = new HotPhraseEventArgs("Fred");
+                var hotPhraseEventArgs = new HotPhraseEventArgs(this, phraseActionRunState);
                 Handler(this, hotPhraseEventArgs);
             }
 
-            if (KeysToSend is {Count: > 0})
-                foreach (var key in KeysToSend)
-                    SendKeys.SendWait(SendKeysKeyword.KeyToSendKey(key));
+            if (KeysToSend is not {Count: > 0}) 
+                return true;
 
-            return Parent;
+            foreach (var key in KeysToSend)
+                SendKeys.SendWait(SendKeysKeyword.KeyToSendKey(key));
+
+            return true;
         }
     }
 }

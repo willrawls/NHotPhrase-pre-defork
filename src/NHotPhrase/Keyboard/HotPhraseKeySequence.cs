@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace NHotPhrase.Keyboard
@@ -48,10 +49,15 @@ namespace NHotPhrase.Keyboard
             return this;
         }
 
-        public void OnPhrase(object sender, GlobalPhraseHookEventArgs e)
+        public bool Run()
         {
-            Debug.WriteLine(e.Target.Name);
-            e.Handled = true;
+            var state = new PhraseActionRunState(this);
+            foreach (var action in Actions)
+            {
+                if (!action.RunNow(state))
+                    return false;
+            }
+            return true;
         }
 
         public bool IsAMatch(KeyPressHistory keyPressHistoryClone)
@@ -63,11 +69,10 @@ namespace NHotPhrase.Keyboard
                 keyPressHistoryClone.History.GetRange(keyPressHistoryClone.History.Count - Sequence.Count,
                     Sequence.Count);
 
-            for (var i = 0; i < Sequence.Count; i++)
-                if(!SendKeysKeyword.IsAMatch(Sequence[i], possibleMatchRange[i]))
-                    return false;
-
-            return true;
+            return !Sequence
+                .Where((t, i) => !SendKeysKeyword
+                    .IsAMatch(t, possibleMatchRange[i]))
+                .Any();
         }
 
         public HotPhraseKeySequence ThenCall(EventHandler<HotPhraseEventArgs> handler)
