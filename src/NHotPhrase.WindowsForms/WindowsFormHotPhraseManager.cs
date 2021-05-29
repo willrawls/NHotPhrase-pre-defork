@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
@@ -9,32 +10,35 @@ namespace NHotPhrase.WindowsForms
     public class HotPhraseManager : IDisposable
     {
         public Form Parent { get; set; }
-        public HotPhraseKeyboardManager Watcher { get; set; }
-        public KeyPressHistory History { get; set; } = new();
+        public KeyboardManager Keyboard { get; set; }
+        public KeyHistory History { get; set; } = new();
 
         public HotPhraseManager(Form parent)
         {
             Parent = parent;
-            Watcher = HotPhraseKeyboardManager.Factory(OnManagerKeyboardPressEvent);
+            Keyboard = KeyboardManager.Factory(OnManagerKeyboardPressEvent);
         }
 
         public void OnManagerKeyboardPressEvent(object? sender, GlobalKeyboardHookEventArgs e)
         {
             if (e.KeyboardState == KeyboardState.KeyUp)
             {
-                History.Add(e.KeyboardData.Key);
-                var trigger = Watcher.Triggers.FirstMatch(History);
+                Debug.WriteLine($"Key {e.KeyboardData.Key}");
+                History.AddKeyPress(e.KeyboardData.Key);
+                var trigger = Keyboard.KeyUpTriggers.FirstMatch(History);
                 if (trigger == null)
                     return;
 
-                History.History.
+                Debug.WriteLine($"Trigger {trigger.Name}");
+
+                History.Clear();
                 trigger.Run();
             }
         }
 
         public void Dispose()
         {
-            Watcher?.Dispose();
+            Keyboard?.Dispose();
         }
     }
 

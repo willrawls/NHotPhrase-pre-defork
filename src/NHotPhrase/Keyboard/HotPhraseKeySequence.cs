@@ -60,14 +60,12 @@ namespace NHotPhrase.Keyboard
             return true;
         }
 
-        public bool IsAMatch(KeyPressHistory keyPressHistoryClone)
+        public bool IsAMatch(List<Keys> keyList)
         {
-            if (keyPressHistoryClone.History.Count < Sequence.Count)
+            if (keyList.Count < Sequence.Count)
                 return false;
 
-            var possibleMatchRange =
-                keyPressHistoryClone.History.GetRange(keyPressHistoryClone.History.Count - Sequence.Count,
-                    Sequence.Count);
+            var possibleMatchRange = keyList.GetRange(keyList.Count - Sequence.Count, Sequence.Count);
 
             return !Sequence
                 .Where((t, i) => !SendKeysKeyword

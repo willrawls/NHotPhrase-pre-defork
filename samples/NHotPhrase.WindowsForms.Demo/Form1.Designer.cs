@@ -1,6 +1,6 @@
 ﻿namespace NHotPhrase.WindowsForms.Demo
 {
-    partial class Form1
+    partial class DemoForm
     {
 
         /// <summary>
@@ -25,7 +25,7 @@
         public void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DemoForm));
             this.lblValue = new System.Windows.Forms.Label();
             this.trayIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
@@ -162,7 +162,7 @@
             this.Controls.Add(this.EnableGlobalHotkeysCheckBox);
             this.Controls.Add(this.panel1);
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.Name = "Form1";
+            this.Name = "DemoForm";
             this.Text = "Hot Phrase Demo";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

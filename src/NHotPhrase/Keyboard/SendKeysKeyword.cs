@@ -80,9 +80,12 @@ namespace NHotPhrase.Keyboard
         {
             if (IsExacting(exactingKey))
             {
-                return exactingKey == simplifiableKey;
+                return (exactingKey & simplifiableKey) == exactingKey;
             }
-            return Simplified(exactingKey) == Simplified(simplifiableKey);
+
+            var exactingSimplified = Simplified(exactingKey);
+            var simplifiableSimplified = Simplified(simplifiableKey);
+            return (exactingSimplified & simplifiableSimplified) == exactingSimplified;
         }
 
         // If they user says for instance "LShiftKey" then it has to be the left shift key. But "ShiftKey" means either of the shift keys

@@ -27,7 +27,7 @@ namespace NHotPhrase.WindowsForms.Tests
                 Keys.RControlKey,
                 Keys.RControlKey,
             };
-            var keyPressHistoryClone = new KeyPressHistory(8, 8, DateTime.Now, history);
+            var keyPressHistoryClone = new KeyHistory(8, 8, DateTime.Now, history);
             var actual = data.IsAMatch(keyPressHistoryClone);
 
             Assert.IsTrue(actual);
@@ -51,7 +51,7 @@ namespace NHotPhrase.WindowsForms.Tests
                 Keys.RControlKey,
                 Keys.RControlKey,
             };
-            var keyPressHistoryClone = new KeyPressHistory(8, 8, DateTime.Now, history);
+            var keyPressHistoryClone = new KeyHistory(8, 8, DateTime.Now, history);
             var actual = data.IsAMatch(keyPressHistoryClone);
 
             Assert.IsTrue(actual);
@@ -73,7 +73,7 @@ namespace NHotPhrase.WindowsForms.Tests
                 Keys.A,
                 Keys.RControlKey,
             };
-            var keyPressHistoryClone = new KeyPressHistory(8, 8, DateTime.Now, history);
+            var keyPressHistoryClone = new KeyHistory(8, 8, DateTime.Now, history);
             var actual = data.IsAMatch(keyPressHistoryClone);
 
             Assert.IsFalse(actual);
@@ -94,7 +94,7 @@ namespace NHotPhrase.WindowsForms.Tests
                 Keys.RControlKey,
                 Keys.RControlKey,
             };
-            var keyPressHistoryClone = new KeyPressHistory(8, 8, DateTime.Now, history);
+            var keyPressHistoryClone = new KeyHistory(8, 8, DateTime.Now, history);
             var actual = data.IsAMatch(keyPressHistoryClone);
 
             Assert.IsFalse(actual);

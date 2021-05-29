@@ -4,47 +4,55 @@ using System.Windows.Forms;
 
 namespace NHotPhrase.Keyboard
 {
-    public class KeyPressHistory : List<Keys>
+    public class KeyHistory : List<Keys>
     {
         // public List<Keys> History { get; set; } = new();
         public DateTime LastPressAt { get; set; } = DateTime.MinValue;
         public int MaxHistoryLength { get; set; } = 8;
         public int ClearAfterThisManySeconds { get; set; } = 5;
 
-        public KeyPressHistory()
+        public KeyHistory()
         {
         }
 
-        public KeyPressHistory(int maxHistoryLength, int clearAfterThisManySeconds, DateTime lastPressAt, List<Keys> history)
+        public KeyHistory(int maxHistoryLength, int clearAfterThisManySeconds, DateTime lastPressAt, List<Keys> history)
         {
             MaxHistoryLength = maxHistoryLength;
             ClearAfterThisManySeconds = clearAfterThisManySeconds;
             LastPressAt = lastPressAt;
-            History.AddRange(history);
+            AddRange(history);
         }
 
-        public KeyPressHistory Add(Keys key)
+        public new void Add(Keys key)
+        {
+            AddKeyPress(key);
+        }
+        public KeyHistory AddKeyPress(Keys key)
         {
             // If too much time has gone by, clear the queue
-            if (DateTime.Now.Subtract(LastPressAt).Seconds > ClearAfterThisManySeconds)
+            if (Count > 0 && DateTime.Now.Subtract(LastPressAt).Seconds > ClearAfterThisManySeconds)
             {
-                History.Clear();
+                Clear();
             }
 
             // If the history is too long, truncate it keeping the newest entries
-            while (History.Count > MaxHistoryLength)
+            while (Count > MaxHistoryLength)
             {
-                History.RemoveAt(0);
+                RemoveAt(0);
             }
 
             LastPressAt = DateTime.Now;
-            History.Add(key);
+            base.Add(key);
             return this;
         }
 
-        public KeyPressHistory Clone()
+        public static object SyncRoot = new();
+        public List<Keys> KeyList()
         {
-            return new KeyPressHistory(MaxHistoryLength, ClearAfterThisManySeconds, LastPressAt, History);
+            lock (SyncRoot)
+            {
+                return new List<Keys>(this);
+            }
         }
     }
 }

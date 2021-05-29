@@ -5,15 +5,17 @@ using NHotPhrase.Keyboard;
 
 namespace NHotPhrase.WindowsForms.Demo
 {
-    public partial class Form1 : Form
+    public partial class DemoForm : Form
     {
-        public static readonly Keys IncrementKeys = Keys.Control | Keys.Alt | Keys.Up;
-        public static readonly Keys DecrementKeys = Keys.Control | Keys.Alt | Keys.Down;
         public int _value;
 
         public HotPhraseManager Manager { get; set; }
+        public static object SyncRoot = new object();
+        public static bool UiChanging = false;
 
-        public Form1()
+        public delegate void CheckedChangedDelegate(object sender, System.EventArgs e);
+
+        public DemoForm()
         {
             InitializeComponent();
             SetupHotPhrases();
@@ -24,14 +26,14 @@ namespace NHotPhrase.WindowsForms.Demo
             Manager?.Dispose();
             Manager = new HotPhraseManager(this);
 
-            Manager.Watcher.AddOrReplace(
+            Manager.Keyboard.AddOrReplace(
                 HotPhraseKeySequence
                     .Named("Toggle phrase activation")
                     .WhenKeyRepeats(Keys.RControlKey, 3)
                     .ThenCall(OnTogglePhraseActivation)
             );
 
-            Manager.Watcher.AddOrReplace(
+            Manager.Keyboard.AddOrReplace(
                 HotPhraseKeySequence
                     .Named("Increment")
                     .WhenKeyPressed(Keys.ControlKey)
@@ -41,7 +43,7 @@ namespace NHotPhrase.WindowsForms.Demo
             );
 
             // Spell it out long hand
-            Manager.Watcher.AddOrReplace(
+            Manager.Keyboard.AddOrReplace(
                 HotPhraseKeySequence
                     .Named("Decrement")
                     .WhenKeyPressed(Keys.CapsLock)
@@ -52,12 +54,16 @@ namespace NHotPhrase.WindowsForms.Demo
             );
 
             // Or use the NHotkey like syntax 
-            Manager.Watcher.AddOrReplace("Decrement", new[] {Keys.CapsLock, Keys.CapsLock, Keys.D, Keys.Back}, OnDecrement);
+            // Manager.Keyboard.AddOrReplace("Decrement", new[] {Keys.CapsLock, Keys.CapsLock, Keys.D, Keys.Back}, OnDecrement);
         }
 
         private void OnTogglePhraseActivation(object sender, HotPhraseEventArgs e)
         {
-            EnableGlobalHotkeysCheckBox_CheckedChanged(sender, null);
+            lock(SyncRoot)
+            {
+                EnableGlobalHotkeysCheckBox.Checked = !EnableGlobalHotkeysCheckBox.Checked;
+                //UpdateGlobalThingy(EnableGlobalHotkeysCheckBox.Checked);
+            }
         }
 
         public void OnIncrement(object sender, HotPhraseEventArgs e)
@@ -82,10 +88,6 @@ namespace NHotPhrase.WindowsForms.Demo
             }
         }
 
-        public static object SyncRoot = new object();
-        public static bool UiChanging = false;
-
-        public delegate void CheckedChangedDelegate(object sender, System.EventArgs e);
         public void EnableGlobalHotkeysCheckBox_CheckedChanged(object sender, System.EventArgs e)
         {
             if (InvokeRequired)
@@ -94,13 +96,17 @@ namespace NHotPhrase.WindowsForms.Demo
                 return;
             }
 
-            if (!Monitor.TryEnter(SyncRoot)) return;
-            if (UiChanging == true)
-                return;
+            UpdateGlobalThingy(EnableGlobalHotkeysCheckBox.Checked);
+        }
+
+        private void UpdateGlobalThingy(bool enableThingy)
+        {
+            if (UiChanging || !Monitor.TryEnter(SyncRoot)) return;
+
             UiChanging = true;
             try
             {
-                if (EnableGlobalHotkeysCheckBox.Checked)
+                if (enableThingy)
                 {
                     SetupHotPhrases();
                 }

@@ -5,16 +5,16 @@ using NHotPhrase.Keyboard;
 
 namespace NHotPhrase.WindowsForms
 {
-    public class HotPhraseKeyboardManager : IDisposable
+    public class KeyboardManager : IDisposable
     {
         public GlobalKeyboardHook Hook { get; set; }
-        public TriggerList Triggers { get; set; } = new();
+        public TriggerList KeyUpTriggers { get; set; } = new();
 
-        public HotPhraseKeyboardManager()
+        public KeyboardManager()
         {
         }
 
-        public HotPhraseKeyboardManager CallThisEachTimeAKeyIsPressed(
+        public KeyboardManager CallThisEachTimeAKeyIsPressed(
             EventHandler<GlobalKeyboardHookEventArgs> keyEventHandler)
         {
             if (keyEventHandler == null)
@@ -24,22 +24,22 @@ namespace NHotPhrase.WindowsForms
             return this;
         }
 
-        public HotPhraseKeyboardManager AddOrReplace(string name, Keys[] keys,
+        public KeyboardManager AddOrReplace(string name, Keys[] keys,
             EventHandler<HotPhraseEventArgs> hotPhraseEventArgs)
         {
             return AddOrReplace(new HotPhraseKeySequence(name, keys, hotPhraseEventArgs));
         }
 
-        public HotPhraseKeyboardManager AddOrReplace(HotPhraseKeySequence hotPhraseKeySequence)
+        public KeyboardManager AddOrReplace(HotPhraseKeySequence hotPhraseKeySequence)
         {
-            var existingPhraseKeySequence = Triggers
+            var existingPhraseKeySequence = KeyUpTriggers
                 .FirstOrDefault(x => x.Name
                     .Equals(hotPhraseKeySequence.Name,
                         StringComparison.InvariantCultureIgnoreCase));
 
             if (existingPhraseKeySequence != null)
-                Triggers.Remove(existingPhraseKeySequence);
-            Triggers.Add(hotPhraseKeySequence);
+                KeyUpTriggers.Remove(existingPhraseKeySequence);
+            KeyUpTriggers.Add(hotPhraseKeySequence);
             return this;
         }
 
@@ -48,13 +48,13 @@ namespace NHotPhrase.WindowsForms
             Hook?.Dispose();
         }
 
-        public static HotPhraseKeyboardManager Factory(
+        public static KeyboardManager Factory(
             EventHandler<GlobalKeyboardHookEventArgs> onManagerKeyboardPressEvent)
         {
             if (onManagerKeyboardPressEvent == null)
                 throw new ArgumentNullException(nameof(onManagerKeyboardPressEvent));
 
-            var manager = new HotPhraseKeyboardManager
+            var manager = new KeyboardManager
             {
                 Hook = new GlobalKeyboardHook(onManagerKeyboardPressEvent)
             };
