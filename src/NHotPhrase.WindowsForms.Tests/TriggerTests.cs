@@ -123,23 +123,52 @@ namespace NHotPhrase.WindowsForms.Tests
 
         [DataTestMethod]
         [DataRow(new[]{ Keys.A }, new[]{ Keys.A })]
-        public void VariousSequences_IsAMatch_True(Keys[] simulatedHistory, Keys[] sequence)
+        [DataRow(new[]{ Keys.A, Keys.A }, new[]{ Keys.A, Keys.B, Keys.A, Keys.A })]
+        [DataRow(new[]{ Keys.CapsLock, Keys.Control }, new[]{ Keys.A, Keys.B, Keys.CapsLock, Keys.RControlKey })]
+        [DataRow(new[]{ Keys.Control, Keys.LControlKey }, new[]{ Keys.A, Keys.RControlKey, Keys.LControlKey })]
+        [DataRow(new[]{ Keys.RControlKey, Keys.RControlKey }, new[]{ Keys.RControlKey, Keys.B, Keys.RControlKey, Keys.RControlKey })]
+        [DataRow(new[]{ Keys.RControlKey, Keys.Control }, new[]{ Keys.RControlKey, Keys.B, Keys.RControlKey, Keys.LControlKey })]
+        public void VariousSequences_IsAMatch_True(Keys[] hotPhraseSequence, Keys[] userTyped)
         {
             for (var i = 0; i < 100; i++)
             {
-                var simulatedHistoryList = simulatedHistory.ToList();
-                var sequenceList = sequence.ToList();
+                var simulatedHistoryList = userTyped.ToList();
+                var sequenceList = hotPhraseSequence.ToList();
 
                 VariousSequences_PokingAround(simulatedHistoryList, sequenceList, true);
 
-                simulatedHistoryList.Insert(0, RandomKey(sequence));
+                simulatedHistoryList.Insert(0, RandomKey(hotPhraseSequence));
                 VariousSequences_PokingAround(simulatedHistoryList, sequenceList, true);
             
-                simulatedHistoryList.Add(RandomKey(sequence));
+                simulatedHistoryList.Add(RandomKey(hotPhraseSequence));
                 VariousSequences_PokingAround(simulatedHistoryList, sequenceList, false);
             }
         }
 
+        [DataTestMethod]
+        [DataRow(new[]{ Keys.B }, new[]{ Keys.A })]
+        [DataRow(new[]{ Keys.A, Keys.A }, new[]{ Keys.A, Keys.B, Keys.A, Keys.B })]
+        [DataRow(new[]{ Keys.CapsLock, Keys.Control }, new[]{ Keys.A, Keys.CapsLock, Keys.B, Keys.RControlKey })]
+        [DataRow(new[]{ Keys.Control, Keys.LControlKey }, new[]{ Keys.A, Keys.RControlKey, Keys.RControlKey })]
+        [DataRow(new[]{ Keys.RControlKey, Keys.RControlKey }, new[]{ Keys.RControlKey, Keys.B, Keys.LControlKey, Keys.RControlKey })]
+        [DataRow(new[]{ Keys.RControlKey, Keys.Control }, new[]{ Keys.RControlKey, Keys.C })]
+        public void VariousSequences_IsAMatch_False(Keys[] hotPhraseSequence, Keys[] userTyped)
+        {
+            for (var i = 0; i < 100; i++)
+            {
+                var simulatedHistoryList = userTyped.ToList();
+                var sequenceList = hotPhraseSequence.ToList();
+
+                VariousSequences_PokingAround(simulatedHistoryList, sequenceList, false);
+            
+                simulatedHistoryList.Insert(0, RandomKey(hotPhraseSequence));
+                VariousSequences_PokingAround(simulatedHistoryList, sequenceList, false);
+            
+                simulatedHistoryList.Add(RandomKey(hotPhraseSequence));
+                VariousSequences_PokingAround(simulatedHistoryList, sequenceList, false);
+            }
+        }
+        
         [TestMethod]
         public void SingleKey_IsAMatch_True()
         {
@@ -154,25 +183,6 @@ namespace NHotPhrase.WindowsForms.Tests
 
                 simulatedHistoryList.Insert(0, RandomKey(sequence));
                 VariousSequences_PokingAround(simulatedHistoryList, sequenceList, true);
-            
-                simulatedHistoryList.Add(RandomKey(sequence));
-                VariousSequences_PokingAround(simulatedHistoryList, sequenceList, false);
-            }
-        }
-
-        [DataTestMethod]
-        [DataRow(new[]{ Keys.A }, new[]{ Keys.B })]
-        public void VariousSequences_IsAMatch_False(Keys[] simulatedHistory, Keys[] sequence)
-        {
-            for (var i = 0; i < 100; i++)
-            {
-                var simulatedHistoryList = simulatedHistory.ToList();
-                var sequenceList = sequence.ToList();
-
-                VariousSequences_PokingAround(simulatedHistoryList, sequenceList, false);
-            
-                simulatedHistoryList.Insert(0, RandomKey(sequence));
-                VariousSequences_PokingAround(simulatedHistoryList, sequenceList, false);
             
                 simulatedHistoryList.Add(RandomKey(sequence));
                 VariousSequences_PokingAround(simulatedHistoryList, sequenceList, false);
