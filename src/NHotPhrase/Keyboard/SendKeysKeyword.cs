@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows.Forms;
 
 namespace NHotPhrase.Keyboard
@@ -18,7 +17,7 @@ namespace NHotPhrase.Keyboard
         public static bool IsAMatch(Keys exactingKey, Keys simplifiableKey)
         {
             if (!ShouldBeSimplified(exactingKey)) 
-                return (exactingKey & simplifiableKey) == exactingKey;
+                return simplifiableKey == exactingKey; // Must be exactly that key
 
             var exactingSimplified = Simplify(exactingKey);
             var simplifiableSimplified = Simplify(simplifiableKey);
