@@ -21,7 +21,7 @@ namespace NHotPhrase.WindowsForms.Demo
         private void SetupHotPhrases()
         {
             HotPhraseManager?.Dispose();
-            HotPhraseManager = new DemoHotPhraseManager();
+            HotPhraseManager = new DemoHotPhraseManager(this);
 
 
             HotPhraseManager.AddOrReplace(
@@ -109,15 +109,17 @@ namespace NHotPhrase.WindowsForms.Demo
         }
     }
 
-    public class DemoHotPhraseManager : HotPhraseManager
+    public class DemoHotPhraseManager
     {
-        public EventHandler<GlobalKeyboardHookEventArgs> KeyboardPressedEvent { get; set; }
-
-        public DemoHotPhraseManager(EventHandler<GlobalKeyboardHookEventArgs> keyboardPressedEvent) : base(keyboardPressedEvent)
+        public HotPhraseManager HotPhraseManager { get; set; }
+        public DemoHotPhraseManager(Form1 parent)
         {
-            KeyboardPressedEvent = keyboardPressedEvent;
+            HotPhraseManager = HotPhraseManager.Factory(OnManagerKeyboardPressEvent);
         }
 
-        
+        public void OnManagerKeyboardPressEvent(object? sender, GlobalKeyboardHookEventArgs e)
+        {
+            <<< Start here
+        }
     }
 }

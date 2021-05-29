@@ -15,15 +15,19 @@ namespace NHotPhrase.WindowsForms
         public GlobalKeyboardHook Hook { get; set; }
         public TriggerList Triggers { get; set; } = new();
 
-        public HotPhraseManager(EventHandler<GlobalKeyboardHookEventArgs> keyboardPressedEvent)
+        public static HotPhraseManager Factory(EventHandler<GlobalKeyboardHookEventArgs> onManagerKeyboardPressEvent)
         {
-            if (keyboardPressedEvent == null)
-                throw new ArgumentNullException(nameof(keyboardPressedEvent));
-            
-            Hook = new GlobalKeyboardHook(keyboardPressedEvent);
+            if (onManagerKeyboardPressEvent == null)
+                throw new ArgumentNullException(nameof(onManagerKeyboardPressEvent));
+
+            var manager = new HotPhraseManager
+            {
+                Hook = new GlobalKeyboardHook(onManagerKeyboardPressEvent)
+            };
+            return manager;
         }
 
-        public HotPhraseManager CallEachTimeKeyIsPressed(EventHandler<GlobalKeyboardHookEventArgs> keyEventHandler)
+        public HotPhraseManager CallThisEachTimeAKeyIsPressed(EventHandler<GlobalKeyboardHookEventArgs> keyEventHandler)
         {
             if (keyEventHandler == null)
                 throw new ArgumentNullException(nameof(keyEventHandler));
