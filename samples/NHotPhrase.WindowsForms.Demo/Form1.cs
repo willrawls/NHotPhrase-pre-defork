@@ -10,7 +10,7 @@ namespace NHotPhrase.WindowsForms.Demo
         public static readonly Keys DecrementKeys = Keys.Control | Keys.Alt | Keys.Down;
         public int _value;
 
-        public HotPhraseManager HotPhraseManager { get; set; }
+        public WindowsFormHotPhraseManager HotPhraseManager { get; set; }
 
         public Form1()
         {
@@ -21,17 +21,16 @@ namespace NHotPhrase.WindowsForms.Demo
         private void SetupHotPhrases()
         {
             HotPhraseManager?.Dispose();
-            HotPhraseManager = new DemoHotPhraseManager(this);
+            HotPhraseManager = new WindowsFormHotPhraseManager(this);
 
-
-            HotPhraseManager.AddOrReplace(
+            HotPhraseManager.Current.AddOrReplace(
                 HotPhraseKeySequence
                     .Named("Toggle phrase activation")
                     .WhenKeyRepeats(Keys.RControlKey, 3)
                     .ThenCall(OnTogglePhraseActivation)
             );
 
-            HotPhraseManager.AddOrReplace(
+            HotPhraseManager.Current.AddOrReplace(
                 HotPhraseKeySequence
                     .Named("Increment")
                     .WhenKeyPressed(Keys.ControlKey)
@@ -41,7 +40,7 @@ namespace NHotPhrase.WindowsForms.Demo
             );
 
             // Spell it out long hand
-            HotPhraseManager.AddOrReplace(
+            HotPhraseManager.Current.AddOrReplace(
                 HotPhraseKeySequence
                     .Named("Decrement")
                     .WhenKeyPressed(Keys.CapsLock)
@@ -52,7 +51,7 @@ namespace NHotPhrase.WindowsForms.Demo
             );
 
             // Or use the NHotkey like syntax 
-            HotPhraseManager.AddOrReplace("Decrement", new[] {Keys.CapsLock, Keys.CapsLock, Keys.D, Keys.Back}, OnDecrement);
+            HotPhraseManager.Current.AddOrReplace("Decrement", new[] {Keys.CapsLock, Keys.CapsLock, Keys.D, Keys.Back}, OnDecrement);
         }
 
         private void OnTogglePhraseActivation(object sender, HotPhraseEventArgs e)
@@ -82,12 +81,12 @@ namespace NHotPhrase.WindowsForms.Demo
             }
         }
 
-        public delegate void fred(object sender, System.EventArgs e);
+        public delegate void CheckedChangedDelegate(object sender, System.EventArgs e);
         public void chkEnableGlobalHotkeys_CheckedChanged(object sender, System.EventArgs e)
         {
             if (InvokeRequired)
             {
-                Invoke(new fred(chkEnableGlobalHotkeys_CheckedChanged), null, null);
+                Invoke(new CheckedChangedDelegate(chkEnableGlobalHotkeys_CheckedChanged), null, null);
                 return;
             }
             chkEnableGlobalHotkeys.Checked = !chkEnableGlobalHotkeys.Checked;
@@ -101,25 +100,6 @@ namespace NHotPhrase.WindowsForms.Demo
                 HotPhraseManager?.Dispose();
                 HotPhraseManager = null;
             }
-        }
-
-        public void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-    }
-
-    public class DemoHotPhraseManager
-    {
-        public HotPhraseManager HotPhraseManager { get; set; }
-        public DemoHotPhraseManager(Form1 parent)
-        {
-            HotPhraseManager = HotPhraseManager.Factory(OnManagerKeyboardPressEvent);
-        }
-
-        public void OnManagerKeyboardPressEvent(object? sender, GlobalKeyboardHookEventArgs e)
-        {
-            <<< Start here
         }
     }
 }

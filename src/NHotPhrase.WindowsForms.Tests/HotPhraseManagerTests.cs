@@ -39,15 +39,16 @@ namespace NHotPhrase.WindowsForms.Tests
             Assert.AreEqual(3, callCount);
         }
 
-        private static HotPhraseManager HotPhraseManager(out HotPhraseKeySequence hotPhrase)
+        private static HotPhraseKeyboardManager HotPhraseManager(out HotPhraseKeySequence hotPhrase)
         {
             var keys = new[] {Keys.ControlKey, Keys.ControlKey, Keys.ControlKey};
 
             void hotPhraseEventArgs(object? _, HotPhraseEventArgs e) => e.Handled = true;
             hotPhrase = new HotPhraseKeySequence("RightControl3TimesInARow", keys, hotPhraseEventArgs);
 
-            void hotGlobalKeyboardHookEventArgs(object? _, GlobalKeyboardHookEventArgs e) => e.Handled = true;
-            var hotPhraseManager = new HotPhraseManager(hotGlobalKeyboardHookEventArgs);
+            void HotGlobalKeyboardHookEventArgs(object? _, GlobalKeyboardHookEventArgs e) => e.Handled = true;
+            var hotPhraseManager = HotPhraseKeyboardManager.Factory(HotGlobalKeyboardHookEventArgs);
+            
 
             hotPhraseManager.AddOrReplace(hotPhrase);
             return hotPhraseManager;
