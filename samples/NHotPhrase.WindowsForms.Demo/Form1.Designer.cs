@@ -35,7 +35,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.chkEnableGlobalHotkeys = new System.Windows.Forms.CheckBox();
+            this.EnableGlobalHotkeysCheckBox = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -140,18 +140,18 @@
             // 
             // chkEnableGlobalHotkeys
             // 
-            this.chkEnableGlobalHotkeys.AutoSize = true;
-            this.chkEnableGlobalHotkeys.Checked = true;
-            this.chkEnableGlobalHotkeys.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkEnableGlobalHotkeys.Dock = System.Windows.Forms.DockStyle.Top;
-            this.chkEnableGlobalHotkeys.Location = new System.Drawing.Point(0, 0);
-            this.chkEnableGlobalHotkeys.Margin = new System.Windows.Forms.Padding(2);
-            this.chkEnableGlobalHotkeys.Name = "chkEnableGlobalHotkeys";
-            this.chkEnableGlobalHotkeys.Size = new System.Drawing.Size(466, 24);
-            this.chkEnableGlobalHotkeys.TabIndex = 2;
-            this.chkEnableGlobalHotkeys.Text = "Global hotkeys enabled";
-            this.chkEnableGlobalHotkeys.UseVisualStyleBackColor = true;
-            this.chkEnableGlobalHotkeys.CheckedChanged += new System.EventHandler(this.chkEnableGlobalHotkeys_CheckedChanged);
+            this.EnableGlobalHotkeysCheckBox.AutoSize = true;
+            this.EnableGlobalHotkeysCheckBox.Checked = true;
+            this.EnableGlobalHotkeysCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.EnableGlobalHotkeysCheckBox.Dock = System.Windows.Forms.DockStyle.Top;
+            this.EnableGlobalHotkeysCheckBox.Location = new System.Drawing.Point(0, 0);
+            this.EnableGlobalHotkeysCheckBox.Margin = new System.Windows.Forms.Padding(2);
+            this.EnableGlobalHotkeysCheckBox.Name = "EnableGlobalHotkeysCheckBox";
+            this.EnableGlobalHotkeysCheckBox.Size = new System.Drawing.Size(466, 24);
+            this.EnableGlobalHotkeysCheckBox.TabIndex = 2;
+            this.EnableGlobalHotkeysCheckBox.Text = "Global hotkeys enabled";
+            this.EnableGlobalHotkeysCheckBox.UseVisualStyleBackColor = true;
+            this.EnableGlobalHotkeysCheckBox.CheckedChanged += new System.EventHandler(this.EnableGlobalHotkeysCheckBox_CheckedChanged);
             // 
             // Form1
             // 
@@ -159,7 +159,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(466, 210);
             this.Controls.Add(this.lblValue);
-            this.Controls.Add(this.chkEnableGlobalHotkeys);
+            this.Controls.Add(this.EnableGlobalHotkeysCheckBox);
             this.Controls.Add(this.panel1);
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "Form1";
@@ -180,7 +180,7 @@
         public System.Windows.Forms.Label label2;
         public System.Windows.Forms.Label label3;
         public System.Windows.Forms.Label label1;
-        public System.Windows.Forms.CheckBox chkEnableGlobalHotkeys;
+        public System.Windows.Forms.CheckBox EnableGlobalHotkeysCheckBox;
         public System.Windows.Forms.Label label6;
         public System.Windows.Forms.Label label5;
         private System.ComponentModel.IContainer components;

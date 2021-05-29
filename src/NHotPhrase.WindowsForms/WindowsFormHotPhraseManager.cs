@@ -27,6 +27,7 @@ namespace NHotPhrase.WindowsForms
                 if (trigger == null)
                     return;
 
+                History.History.
                 trigger.Run();
             }
         }

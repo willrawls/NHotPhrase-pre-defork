@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Windows.Forms;
 using NHotPhrase.Keyboard;
 
@@ -56,7 +57,7 @@ namespace NHotPhrase.WindowsForms.Demo
 
         private void OnTogglePhraseActivation(object sender, HotPhraseEventArgs e)
         {
-            chkEnableGlobalHotkeys_CheckedChanged(sender, null);
+            EnableGlobalHotkeysCheckBox_CheckedChanged(sender, null);
         }
 
         public void OnIncrement(object sender, HotPhraseEventArgs e)
@@ -81,24 +82,38 @@ namespace NHotPhrase.WindowsForms.Demo
             }
         }
 
+        public static object SyncRoot = new object();
+        public static bool UiChanging = false;
+
         public delegate void CheckedChangedDelegate(object sender, System.EventArgs e);
-        public void chkEnableGlobalHotkeys_CheckedChanged(object sender, System.EventArgs e)
+        public void EnableGlobalHotkeysCheckBox_CheckedChanged(object sender, System.EventArgs e)
         {
             if (InvokeRequired)
             {
-                Invoke(new CheckedChangedDelegate(chkEnableGlobalHotkeys_CheckedChanged), null, null);
+                Invoke(new CheckedChangedDelegate(EnableGlobalHotkeysCheckBox_CheckedChanged), null, null);
                 return;
             }
-            chkEnableGlobalHotkeys.Checked = !chkEnableGlobalHotkeys.Checked;
 
-            if (chkEnableGlobalHotkeys.Checked)
+            if (!Monitor.TryEnter(SyncRoot)) return;
+            if (UiChanging == true)
+                return;
+            UiChanging = true;
+            try
             {
-                SetupHotPhrases();
+                if (EnableGlobalHotkeysCheckBox.Checked)
+                {
+                    SetupHotPhrases();
+                }
+                else
+                {
+                    Manager?.Dispose();
+                    Manager = null;
+                }
             }
-            else
+            finally
             {
-                Manager?.Dispose();
-                Manager = null;
+                UiChanging = false;
+                Monitor.Exit(SyncRoot);
             }
         }
     }

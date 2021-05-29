@@ -4,9 +4,9 @@ using System.Windows.Forms;
 
 namespace NHotPhrase.Keyboard
 {
-    public class KeyPressHistory
+    public class KeyPressHistory : List<Keys>
     {
-        public List<Keys> History { get; set; } = new();
+        // public List<Keys> History { get; set; } = new();
         public DateTime LastPressAt { get; set; } = DateTime.MinValue;
         public int MaxHistoryLength { get; set; } = 8;
         public int ClearAfterThisManySeconds { get; set; } = 5;
@@ -32,11 +32,12 @@ namespace NHotPhrase.Keyboard
             }
 
             // If the history is too long, truncate it keeping the newest entries
-            if (History.Count > MaxHistoryLength)
+            while (History.Count > MaxHistoryLength)
             {
-                var range = History.GetRange(History.Count - MaxHistoryLength, MaxHistoryLength);
+                History.RemoveAt(0);
             }
 
+            LastPressAt = DateTime.Now;
             History.Add(key);
             return this;
         }
