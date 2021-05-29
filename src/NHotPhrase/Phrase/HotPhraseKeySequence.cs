@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
+using NHotPhrase.Keyboard;
 
-namespace NHotPhrase.Keyboard
+namespace NHotPhrase.Phrase
 {
     public class HotPhraseKeySequence
     {

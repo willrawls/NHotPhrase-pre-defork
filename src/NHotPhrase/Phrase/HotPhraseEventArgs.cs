@@ -1,7 +1,6 @@
 ﻿using System;
-using NHotPhrase.Keyboard;
 
-namespace NHotPhrase
+namespace NHotPhrase.Phrase
 {
     public class HotPhraseEventArgs : EventArgs
     {

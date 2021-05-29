@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NHotPhrase.Keyboard
+namespace NHotPhrase.Phrase
 {
     public class PhraseActions : List<PhraseAction>
     {

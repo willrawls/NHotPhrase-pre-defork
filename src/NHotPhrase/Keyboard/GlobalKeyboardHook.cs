@@ -22,6 +22,7 @@ namespace NHotPhrase.Keyboard
         /// <summary>
         /// </summary>
         /// <param name="registeredKeys">Keys that should trigger logging. Pass null for full logging.</param>
+        /// <exception cref="ArgumentNullException"></exception>
         public GlobalKeyboardHook(EventHandler<GlobalKeyboardHookEventArgs> keyboardPressedEvent)
         {
             if (keyboardPressedEvent == null)

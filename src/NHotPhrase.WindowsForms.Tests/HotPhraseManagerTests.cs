@@ -2,6 +2,7 @@ using System;
 using System.Windows.Forms;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NHotPhrase.Keyboard;
+using NHotPhrase.Phrase;
 
 namespace NHotPhrase.WindowsForms.Tests
 {

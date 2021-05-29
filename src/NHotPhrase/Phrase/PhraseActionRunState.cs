@@ -1,4 +1,4 @@
-﻿namespace NHotPhrase.Keyboard
+﻿namespace NHotPhrase.Phrase
 {
     public class PhraseActionRunState
     {

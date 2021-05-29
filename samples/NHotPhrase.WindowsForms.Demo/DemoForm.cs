@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Windows.Forms;
 using NHotPhrase.Keyboard;
+using NHotPhrase.Phrase;
 
 namespace NHotPhrase.WindowsForms.Demo
 {
@@ -10,8 +11,8 @@ namespace NHotPhrase.WindowsForms.Demo
         public int _value;
 
         public HotPhraseManager Manager { get; set; }
-        public static object SyncRoot = new object();
-        public static bool UiChanging = false;
+        public static object SyncRoot = new();
+        public static bool UiChanging;
 
         public delegate void CheckedChangedDelegate(object sender, System.EventArgs e);
 
@@ -52,9 +53,24 @@ namespace NHotPhrase.WindowsForms.Demo
                     .ThenKeyPressed(Keys.Back)
                     .ThenCall(OnDecrement)
             );
-
             // Or use the NHotkey like syntax 
             // Manager.Keyboard.AddOrReplace("Decrement", new[] {Keys.CapsLock, Keys.CapsLock, Keys.D, Keys.Back}, OnDecrement);
+
+            // Write some text
+            Manager.Keyboard.AddOrReplace(
+                HotPhraseKeySequence
+                    .Named("Write some text")
+                    .WhenKeyPressed(Keys.CapsLock)
+                    .ThenKeyPressed(Keys.CapsLock)
+                    .ThenKeyPressed(Keys.W)
+                    .ThenKeyPressed(Keys.I)
+                    .ThenCall(OnWriteEmail)
+            );
+        }
+
+        private void OnWriteEmail(object? sender, HotPhraseEventArgs e)
+        {
+            SendKeys.SendWait("lliam.rawls@gmail.com\t");
         }
 
         private void OnTogglePhraseActivation(object sender, HotPhraseEventArgs e)
@@ -62,7 +78,6 @@ namespace NHotPhrase.WindowsForms.Demo
             lock(SyncRoot)
             {
                 EnableGlobalHotkeysCheckBox.Checked = !EnableGlobalHotkeysCheckBox.Checked;
-                //UpdateGlobalThingy(EnableGlobalHotkeysCheckBox.Checked);
             }
         }
 

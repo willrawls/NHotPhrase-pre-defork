@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using NHotPhrase.Keyboard;
 
-namespace NHotPhrase.Keyboard
+namespace NHotPhrase
 {
     public static class Win32
     {
@@ -44,11 +45,5 @@ namespace NHotPhrase.Keyboard
         /// <returns>If the function succeeds, the return value is true.</returns>
         [DllImport("USER32", SetLastError = true)]
         public static extern IntPtr CallNextHookEx(IntPtr hHook, int code, IntPtr wParam, IntPtr lParam);
-
-        [DllImport("user32.dll", SetLastError = true)]
-        public static extern bool RegisterHotKey(IntPtr hWnd, int id, HotPhraseFlags fsModifiers, uint vk);
-
-        [DllImport("user32.dll", SetLastError = true)]
-        public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
     }
 }

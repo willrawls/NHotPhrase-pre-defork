@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NHotPhrase
+namespace NHotPhrase.Phrase
 {
     [Flags]
     public enum HotPhraseFlags : uint
