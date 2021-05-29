@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NHotPhrase.Keyboard;
@@ -116,6 +117,16 @@ namespace NHotPhrase.WindowsForms.Tests
             var keyPressHistoryClone = new KeyHistory(8, 8, DateTime.Now, history);
             var actual = data.IsAMatch(keyPressHistoryClone);
 
+            Assert.IsFalse(actual);
+        }
+
+        [DataTestMethod]
+        [DataRow(new[]{ Keys.A }, new[]{ Keys.B })]
+        public void VariousSequences_IsAMatch_False(Keys[] simulatedHistory, Keys[] sequence)
+        {
+            var hotPhraseKeySequence = new HotPhraseKeySequence("Fred", sequence, (sender, args) => args.Handled = true);
+            var keyHistory = new KeyHistory(8, 8, DateTime.Now, simulatedHistory.ToList());
+            var actual = hotPhraseKeySequence.IsAMatch(keyHistory);
             Assert.IsFalse(actual);
         }
     }
