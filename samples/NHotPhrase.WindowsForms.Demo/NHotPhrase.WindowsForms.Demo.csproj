@@ -6,6 +6,9 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="System.Threading.Thread" Version="4.3.0" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\src\NHotPhrase.WindowsForms\NHotPhrase.WindowsForms.csproj" />
   </ItemGroup>
 </Project>

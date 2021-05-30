@@ -1,21 +1,81 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace NHotPhrase.Keyboard
 {
+    public static class Extensions
+    {
+        public static List<string> MakeReadyForSendKeys(this string target, int splitLength = 8)
+        {
+            if (string.IsNullOrEmpty(target))
+                return new List<string>();
+
+            foreach (var keyword in SendKeysKeyword.Keywords.Where(k => !string.IsNullOrEmpty(k.ReplaceWith)))
+            {
+                target = target.Replace(keyword.Name, "⌂" + keyword.ReplaceWith + "⌂");
+            }
+
+            var list = target.Split('⌂', StringSplitOptions.RemoveEmptyEntries).ToList();
+            while(list.Any(p => p.Length > splitLength))
+            {
+                for (var i = 0; i < list.Count; i++)
+                {
+                    if (list[i].Length > splitLength)
+                    {
+                        var pieces = list[i].SplitInTwo();
+                        list.RemoveAt(i);
+                        list.InsertRange(i, pieces);
+                    }
+                }
+            }   
+            return list;
+        }
+
+        public static string[] SplitInTwo(this string target)
+        {
+            var index = (int) target.Length / 2;
+            return new[]
+            {
+                target.Substring(0, index),
+                target.Substring(index),
+            };
+        }
+
+        /*
+        public static List<string> SplitIntoEqualPieces(this string str, int splitLength)
+        {
+            if (string.IsNullOrEmpty(str) || splitLength < 1) 
+            {
+                throw new ArgumentException();
+            }
+ 
+            return Enumerable.Range(0, str.Length / splitLength)
+                .Select(i => str.Substring(i * splitLength, splitLength))
+                .ToList();
+        }
+    */
+    }
+
     public class SendKeysKeyword
     {
         public string Name { get; }
         public int Number { get; }
+        public string ReplaceWith { get; }
 
-        public SendKeysKeyword(string name, int number)
+        public SendKeysKeyword(string name, int number, string replaceWith = null)
         {
             Name = name;
             Number = number;
+            ReplaceWith = replaceWith;
         }
 
         public static bool IsAMatch(Keys exactingKey, Keys simplifiableKey)
         {
+            exactingKey = KeyFilter(exactingKey);
+            simplifiableKey = KeyFilter(simplifiableKey);
+
             if (!ShouldBeSimplified(exactingKey)) 
                 return simplifiableKey == exactingKey; // Must be exactly that key
 
@@ -23,6 +83,16 @@ namespace NHotPhrase.Keyboard
             var simplifiableSimplified = Simplify(simplifiableKey);
             return (exactingSimplified & simplifiableSimplified) == exactingSimplified;
 
+        }
+
+        private static Keys KeyFilter(Keys key)
+        {
+            // Some keys have the same value
+            if (key == Keys.Return)
+                key = Keys.Enter;
+            else if (key == Keys.CapsLock)
+                key = Keys.Capital;
+            return key;
         }
 
         public static bool ShouldBeSimplified(Keys key)
@@ -48,6 +118,7 @@ namespace NHotPhrase.Keyboard
                 case Keys.D9:           // == NumPad9
                 case Keys.OemMinus:     // == Separator
                 case Keys.Oemplus:      // == Add
+                case Keys.Capital:
                     return true;
             }
 
@@ -149,7 +220,7 @@ namespace NHotPhrase.Keyboard
                 : key.ToString();
         }
 
-        public static readonly SendKeysKeyword[] Keywords = new SendKeysKeyword[49]
+        public static readonly SendKeysKeyword[] Keywords = new SendKeysKeyword[]
         {
             new("ENTER", 13),
             new("TAB", 9),
@@ -197,9 +268,21 @@ namespace NHotPhrase.Keyboard
             new("ADD", 107),
             new("SUBTRACT", 109),
             new("DIVIDE", 111),
-            new("+", 107),
-            new("%", 65589),
-            new("^", 65590)
+
+            // To specify brace characters, use "{{}" and "{}}". Brackets ([ ]) have no special meaning to SendKeys, but you must enclose them in braces.
+            new("{", 123, "{{}"),
+            new("}", 125, "}{}"),
+            new("[", 91, "{[}"),
+            new("]", 93, "}]}"),
+
+            // The plus sign (+), caret (^), percent sign (%), tilde (~), and parentheses () have special meanings to SendKeys.
+            new("+", 107, "{ADD}"),
+            new("^", 65590, "{^}"),
+            new("%", 65589, "{%}"),
+            new("~", 13, "{ENTER}"),
+            new("(", 40, "{(}"),
+            new(")", 41, "{)}"),
+
         };
     }
 }

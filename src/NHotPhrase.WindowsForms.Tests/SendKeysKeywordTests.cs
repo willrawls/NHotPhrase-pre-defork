@@ -1,4 +1,4 @@
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NHotPhrase.Keyboard;
 
@@ -7,6 +7,53 @@ namespace NHotPhrase.WindowsForms.Tests
     [TestClass]
     public class SendKeysKeywordTests
     {
+        [TestMethod]
+        public void SplitInTwo_EvenLength()
+        {
+            var actual = "abcdefgh".SplitInTwo();
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(2, actual.Length);
+            Assert.AreEqual("abcd", actual[0]);
+            Assert.AreEqual("efgh", actual[1]);
+        }
+
+        [TestMethod]
+        public void SplitInTwo_OddLength()
+        {
+            var actual = "abcdefghi".SplitInTwo();
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(2, actual.Length);
+            Assert.AreEqual("abcd", actual[0]);
+            Assert.AreEqual("efghi", actual[1]);
+        }
+
+        [TestMethod]
+        public void MakeReadyForSendKeys_NeedsToBeBrokenDown()
+        {
+
+        }
+
+        [TestMethod]
+        public void MakeReadyForSendKeys_HasSpecialCharacters()
+        {
+            var data = "abcde+fgyzyzyzyzyzyzyzyzyzyz@hijk.lmn";
+
+            var expected = "abcde{ADD}fgyzyzyzyzyzyzyzyzyzyz@hijk.lmn";
+            var actual = data.MakeReadyForSendKeys(8);
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(6, actual.Count);
+            
+            Assert.AreEqual("abcde", actual[0]);
+            Assert.AreEqual("{ADD}", actual[1]);
+            Assert.AreEqual("fgyzyzy", actual[2]);
+            Assert.AreEqual("zyzyzyzy", actual[3]);
+            Assert.AreEqual("zyzyzyz@", actual[4]);
+            Assert.AreEqual("hijk.lmn", actual[5]);
+
+            Assert.AreEqual(expected, string.Join('⌂', actual).Replace("⌂", ""));
+            
+        }
+
         [TestMethod]
         public void ShouldBeSimplified_True()
         {

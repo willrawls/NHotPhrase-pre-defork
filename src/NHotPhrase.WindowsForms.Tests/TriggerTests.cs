@@ -128,6 +128,13 @@ namespace NHotPhrase.WindowsForms.Tests
         [DataRow(new[]{ Keys.Control, Keys.LControlKey }, new[]{ Keys.A, Keys.RControlKey, Keys.LControlKey })]
         [DataRow(new[]{ Keys.RControlKey, Keys.RControlKey }, new[]{ Keys.RControlKey, Keys.B, Keys.RControlKey, Keys.RControlKey })]
         [DataRow(new[]{ Keys.RControlKey, Keys.Control }, new[]{ Keys.RControlKey, Keys.B, Keys.RControlKey, Keys.LControlKey })]
+
+        [DataRow(new[]{ Keys.RControlKey, Keys.RControlKey, Keys.RControlKey }, new[]{ Keys.RControlKey, Keys.RControlKey, Keys.RControlKey })]
+        [DataRow(new[]{ Keys.Control, Keys.Shift, Keys.Alt}, new[]{ Keys.LControlKey, Keys.RShiftKey, Keys.LMenu })]
+        
+        [DataRow(new[]{ Keys.CapsLock, Keys.Capital, Keys.D, Keys.Back }, new[]{ Keys.RControlKey, Keys.Capital, Keys.Capital, Keys.D, Keys.Back })]
+        [DataRow(new[]{ Keys.CapsLock, Keys.CapsLock, Keys.D, Keys.Back }, new[]{ Keys.RControlKey, Keys.CapsLock, Keys.CapsLock, Keys.D, Keys.Back })]
+        
         public void VariousSequences_IsAMatch_True(Keys[] hotPhraseSequence, Keys[] userTyped)
         {
             for (var i = 0; i < 100; i++)
