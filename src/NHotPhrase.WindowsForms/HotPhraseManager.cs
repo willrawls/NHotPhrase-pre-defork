@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using NHotPhrase.Keyboard;
 
@@ -25,7 +23,7 @@ namespace NHotPhrase.WindowsForms
             {
                 Debug.WriteLine($"Key {e.KeyboardData.Key}");
                 History.AddKeyPress(e.KeyboardData.Key);
-                var trigger = Keyboard.KeyUpTriggers.FirstMatch(History);
+                var trigger = Keyboard.Triggers.FirstMatch(History);
                 if (trigger == null)
                     return;
 

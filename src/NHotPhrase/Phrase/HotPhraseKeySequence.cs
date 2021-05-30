@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 using NHotPhrase.Keyboard;
 
@@ -65,12 +64,17 @@ namespace NHotPhrase.Phrase
             if (keyList.Count < Sequence.Count)
                 return false;
 
-            var possibleMatchRange = keyList.GetRange(keyList.Count - Sequence.Count, Sequence.Count);
+            var possibleMatchRange = keyList.Count == Sequence.Count
+                ? keyList
+                : keyList.GetRange(keyList.Count - Sequence.Count, Sequence.Count);
 
-            return !Sequence
-                .Where((t, i) => !SendKeysKeyword
-                    .IsAMatch(t, possibleMatchRange[i]))
-                .Any();
+            for (var i = 0; i < Sequence.Count; i++)
+            {
+                if (!SendKeysKeyword.IsAMatch(Sequence[i], possibleMatchRange[i]))
+                    return false;
+            }
+
+            return true;
         }
 
         public HotPhraseKeySequence ThenCall(EventHandler<HotPhraseEventArgs> handler)

@@ -1,5 +1,6 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using NHotPhrase.Keyboard;
 using NHotPhrase.Phrase;
@@ -44,6 +45,7 @@ namespace NHotPhrase.WindowsForms.Demo
             );
 
             // Spell it out long hand
+            /*
             Manager.Keyboard.AddOrReplace(
                 HotPhraseKeySequence
                     .Named("Decrement")
@@ -53,8 +55,9 @@ namespace NHotPhrase.WindowsForms.Demo
                     .ThenKeyPressed(Keys.Back)
                     .ThenCall(OnDecrement)
             );
+            */
             // Or use the NHotkey like syntax 
-            // Manager.Keyboard.AddOrReplace("Decrement", new[] {Keys.CapsLock, Keys.CapsLock, Keys.D, Keys.Back}, OnDecrement);
+            Manager.Keyboard.AddOrReplace("Decrement", new[] {Keys.CapsLock, Keys.CapsLock, Keys.D, Keys.Back}, OnDecrement);
 
             // Write some text
             Manager.Keyboard.AddOrReplace(
@@ -63,14 +66,23 @@ namespace NHotPhrase.WindowsForms.Demo
                     .WhenKeyPressed(Keys.CapsLock)
                     .ThenKeyPressed(Keys.CapsLock)
                     .ThenKeyPressed(Keys.W)
-                    .ThenKeyPressed(Keys.I)
+                    .ThenKeyPressed(Keys.R)
+                    .ThenKeyPressed(Keys.G)
                     .ThenCall(OnWriteEmail)
             );
         }
 
         private void OnWriteEmail(object? sender, HotPhraseEventArgs e)
         {
-            SendKeys.SendWait("lliam.rawls@gmail.com\t");
+            SendKeys.SendWait("{BACKSPACE}{BACKSPACE}{BACKSPACE}");
+            Thread.Sleep(2);
+
+            var textPartsToSend = TextToSend.Text.MakeReadyForSendKeys();
+            if(textPartsToSend.Count > 0)
+                foreach (var part in textPartsToSend)
+                {
+                    SendKeys.SendWait(part);
+                }
         }
 
         private void OnTogglePhraseActivation(object sender, HotPhraseEventArgs e)
