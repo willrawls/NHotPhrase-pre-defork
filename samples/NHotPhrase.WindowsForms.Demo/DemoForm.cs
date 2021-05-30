@@ -78,11 +78,13 @@ namespace NHotPhrase.WindowsForms.Demo
             Thread.Sleep(2);
 
             var textPartsToSend = TextToSend.Text.MakeReadyForSendKeys();
-            if(textPartsToSend.Count > 0)
-                foreach (var part in textPartsToSend)
-                {
-                    SendKeys.SendWait(part);
-                }
+            if (textPartsToSend.Count <= 0) return;
+
+            foreach (var part in textPartsToSend)
+            {
+                SendKeys.SendWait(part);
+                Thread.Sleep(2);
+            }
         }
 
         private void OnTogglePhraseActivation(object sender, HotPhraseEventArgs e)
