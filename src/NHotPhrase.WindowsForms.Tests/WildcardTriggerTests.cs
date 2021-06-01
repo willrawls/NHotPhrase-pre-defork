@@ -24,11 +24,11 @@ namespace NHotPhrase.WindowsForms.Tests
                 Keys.D1,
             };
             var keyPressHistoryClone = new KeyHistory(8, 8, DateTime.Now, history);
-            //var actual = data.IsAMatch(keyPressHistoryClone, out string wildcards);
-            MatchResult actual = data.IsAMatch(keyPressHistoryClone);
+            var actual = data.IsAMatch(keyPressHistoryClone, out var matchResult);
 
             Assert.IsTrue(actual);
-            Assert.AreEqual("1", wildcards);
+            Assert.IsNotNull(matchResult);
+            Assert.AreEqual(1, matchResult.ValueAsInt());
         }
         
     }

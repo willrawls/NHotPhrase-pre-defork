@@ -2,14 +2,12 @@
 {
     public class MatchResult
     {
-        public HotPhraseKeySequence Parent { get; set; }
-        public WildcardMatchType MatchType { get; set; }
+        public HotPhraseKeySequence HotPhraseKeySequence { get; set; }
         public string Value { get; set; }
 
-        public MatchResult(HotPhraseKeySequence parent, WildcardMatchType matchType, string value)
+        public MatchResult(HotPhraseKeySequence hotPhraseKeySequence, string value)
         {
-            Parent = parent;
-            MatchType = matchType;
+            HotPhraseKeySequence = hotPhraseKeySequence;
             Value = value;
         }
 

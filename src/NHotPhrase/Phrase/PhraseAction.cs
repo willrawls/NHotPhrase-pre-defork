@@ -27,13 +27,21 @@ namespace NHotPhrase.Phrase
 
         public bool RunNow(PhraseActionRunState phraseActionRunState)
         {
+            var keysToSend = new List<Keys>();
+            if(KeysToSend is {Count: > 0})
+                keysToSend.AddRange(KeysToSend);
+
             if (Handler != null)
             {
-                var hotPhraseEventArgs = new HotPhraseEventArgs(this, phraseActionRunState);
+                var hotPhraseEventArgs = new HotPhraseEventArgs(this, phraseActionRunState, keysToSend);
                 Handler(this, hotPhraseEventArgs);
+
+                keysToSend = new List<Keys>();
+                if(hotPhraseEventArgs.KeysToSend is {Count: > 0})
+                    keysToSend.AddRange(hotPhraseEventArgs.KeysToSend);
             }
 
-            if (KeysToSend is not {Count: > 0}) 
+            if (keysToSend is not {Count: > 0}) 
                 return true;
 
             foreach (var key in KeysToSend)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using NHotPhrase.Keyboard;
 
@@ -55,9 +56,9 @@ namespace NHotPhrase.Phrase
             return this;
         }
 
-        public bool Run()
+        public bool Run(MatchResult matchResult)
         {
-            var state = new PhraseActionRunState(this);
+            var state = new PhraseActionRunState(this, matchResult);
             foreach (var action in Actions)
             {
                 if (!action.RunNow(state))
@@ -66,27 +67,10 @@ namespace NHotPhrase.Phrase
             return true;
         }
 
-        public bool IsAMatch(List<Keys> keyList, out int wildcardNumber, int defaultNumber = 0)
+        public bool IsAMatch(List<Keys> keyList, out MatchResult matchResult)
         {
-            var result = IsAMatch(keyList, out string wildcardString);
-            if (!result)
-            {
-                wildcardNumber = defaultNumber;
-            }
-            else if(!int.TryParse(wildcardString, out int wildcardNumberAttempt))
-            {
-                wildcardNumber = defaultNumber;
-            }
-            else
-            {
-                wildcardNumber = wildcardNumberAttempt;
-            }
-            return result;
-        }
+            matchResult = null;
 
-        public bool IsAMatch(List<Keys> keyList)
-        {
-            wildcards = null;
             var sequencePlusWildcardCount = Sequence.Count + WildcardCount;
             if (keyList.Count < sequencePlusWildcardCount)
                 return false;
@@ -101,9 +85,11 @@ namespace NHotPhrase.Phrase
                     return false;
             }
 
-            if (WildcardCount <= 0) return true;
+            if (WildcardMatchType is WildcardMatchType.Unknown or WildcardMatchType.None 
+                || WildcardCount < 1) 
+                return true;
 
-            var possibleWildcardRange = keyList.Count == sequencePlusWildcardCount
+            var possibleWildcardRange = keyList.Count == WildcardCount
                 ? keyList
                 : keyList.GetRange(keyList.Count - WildcardCount, WildcardCount);
 
@@ -115,8 +101,7 @@ namespace NHotPhrase.Phrase
                 case WildcardMatchType.Digits:
                     if (possibleWildcardRange.OnlyDigits())
                     {
-                        WildcardString = possibleWildcardRange.ToString();
-                        WildcardDigits = int.Parse(WildcardString);
+                        matchResult = new MatchResult(this, possibleWildcardRange.AsString());
                     }
                     else
                     {
@@ -126,8 +111,7 @@ namespace NHotPhrase.Phrase
                 case WildcardMatchType.Letters:
                     if (possibleWildcardRange.OnlyLetters())
                     {
-                        WildcardString = possibleWildcardRange.ToString();
-                        WildcardDigits = 0;
+                        matchResult = new MatchResult(this, possibleWildcardRange.AsString());
                     }
                     else
                     {
@@ -139,18 +123,27 @@ namespace NHotPhrase.Phrase
                         || possibleWildcardRange.OnlyDigits()
                     )
                     {
-                        WildcardString = possibleWildcardRange.ToString();
-                        WildcardDigits = 0;
+                        matchResult = new MatchResult(this, possibleWildcardRange.AsString());
                     }
                     else
                     {
                         return false;
                     }
                     break;
-                case WildcardMatchType.Symbols:
-                //    break;
+                case WildcardMatchType.NotAlphaNumeric:
+                    if (!possibleWildcardRange.OnlyLetters() 
+                        && possibleWildcardRange.OnlyDigits()
+                    )
+                    {
+                        matchResult = new MatchResult(this, possibleWildcardRange.AsString());
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                    break;
                 case WildcardMatchType.Anything:
-                    WildcardString = possibleWildcardRange.ToString();
+                    matchResult = new MatchResult(this, possibleWildcardRange.AsString());
                     break;
             }
 
@@ -168,6 +161,13 @@ namespace NHotPhrase.Phrase
         {
             Sequence.Clear();
             Sequence.Add(key);
+            return this;
+        }
+
+        public HotPhraseKeySequence WhenKeysPressed(params Keys[] keys)
+        {
+            Sequence.Clear();
+            Sequence.AddRange(keys);
             return this;
         }
 
