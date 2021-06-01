@@ -97,12 +97,24 @@ namespace NHotPhrase.WindowsForms.Demo
 
         public static void OnWriteTextWithWildcards(object? sender, HotPhraseEventArgs e)
         {
-            var wildcards = e.State.MatchResult?.Value;
+            if (e.State.MatchResult == null)
+                return;
+
+            var wildcards = e.State.MatchResult.Value;
             var wildcardsLength = wildcards?.Length ?? 0;
             if (wildcardsLength == 0) return;
             
             SendKeysKeyword.SendBackspaces(2);
             $"Your wildcard is {wildcards}".SendString();
+            switch (e.State.MatchResult.ValueAsInt())
+            {
+                case 1:
+                    "\n\n\tThis is specific to wildcard 1\n\n".SendString();
+                    break;
+                case 5:
+                    "\n\n\tThis is specific to wildcard 5\n\n\tsomevalue@bold.one\n\n".SendString();
+                    break;
+            }
         }
 
         private void OnTogglePhraseActivation(object sender, HotPhraseEventArgs e)
