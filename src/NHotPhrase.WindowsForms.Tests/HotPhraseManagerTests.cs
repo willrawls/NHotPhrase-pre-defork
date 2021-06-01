@@ -12,7 +12,7 @@ namespace NHotPhrase.WindowsForms.Tests
         [TestMethod]
         public void RightControl3TimesInARow()
         {
-            var hotPhraseManager = HotPhraseManager(out var hotPhrase);
+            var hotPhraseManager = SetupHotPhraseManagerTest(out var hotPhrase);
 
             var callCount = 0;
             hotPhraseManager.CallThisEachTimeAKeyIsPressed((_, args) =>
@@ -40,7 +40,7 @@ namespace NHotPhrase.WindowsForms.Tests
             Assert.AreEqual(3, callCount);
         }
 
-        private static KeyboardManager HotPhraseManager(out HotPhraseKeySequence hotPhrase)
+        private static KeyboardManager SetupHotPhraseManagerTest(out HotPhraseKeySequence hotPhrase)
         {
             var keys = new[] {Keys.ControlKey, Keys.ControlKey, Keys.ControlKey};
 
@@ -58,7 +58,7 @@ namespace NHotPhrase.WindowsForms.Tests
         [TestMethod]
         public void RightControl3TimesInARow_Dissected()
         {
-            var hotPhraseManager = HotPhraseManager(out var hotPhrase);
+            var hotPhraseManager = SetupHotPhraseManagerTest(out var hotPhrase);
             
             Assert.IsNotNull(hotPhraseManager.Triggers[0].Sequence);
             Assert.AreEqual(3, hotPhraseManager.Triggers[0].Sequence.Count);
@@ -67,7 +67,7 @@ namespace NHotPhrase.WindowsForms.Tests
             Assert.AreEqual(Keys.ControlKey, hotPhraseManager.Triggers[0].Sequence[2]);
             
             Assert.IsNotNull(hotPhraseManager.Triggers[0].Actions[0].Handler);
-            var hotPhraseEventArgs = new HotPhraseEventArgs(null, null);
+            var hotPhraseEventArgs = new HotPhraseEventArgs(null, null, null);
             hotPhraseManager.Triggers[0].Actions[0].Handler(null, hotPhraseEventArgs);
             Assert.IsTrue(hotPhraseEventArgs.Handled);
         }

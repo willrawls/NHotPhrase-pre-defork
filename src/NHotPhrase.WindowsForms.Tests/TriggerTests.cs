@@ -32,7 +32,7 @@ namespace NHotPhrase.WindowsForms.Tests
                 Keys.RControlKey,
             };
             var keyPressHistoryClone = new KeyHistory(8, 8, DateTime.Now, history);
-            var actual = data.IsAMatch(keyPressHistoryClone);
+            var actual = data.IsAMatch(keyPressHistoryClone, out var wildcards);
 
             Assert.IsTrue(actual);
         }
@@ -49,9 +49,10 @@ namespace NHotPhrase.WindowsForms.Tests
                 Keys.ShiftKey,
             };
             var keyPressHistoryClone = new KeyHistory(8, 8, DateTime.Now, history);
-            var actual = data.IsAMatch(keyPressHistoryClone);
+            var actual = data.IsAMatch(keyPressHistoryClone, out var wildcards);
 
             Assert.IsTrue(actual);
+            Assert.IsNull(wildcards);
         }
 
         [TestMethod]
@@ -73,7 +74,7 @@ namespace NHotPhrase.WindowsForms.Tests
                 Keys.RControlKey,
             };
             var keyPressHistoryClone = new KeyHistory(8, 8, DateTime.Now, history);
-            var actual = data.IsAMatch(keyPressHistoryClone);
+            var actual = data.IsAMatch(keyPressHistoryClone, out var wildcards);
 
             Assert.IsTrue(actual);
         }
@@ -95,7 +96,7 @@ namespace NHotPhrase.WindowsForms.Tests
                 Keys.RControlKey,
             };
             var keyPressHistoryClone = new KeyHistory(8, 8, DateTime.Now, history);
-            var actual = data.IsAMatch(keyPressHistoryClone);
+            var actual = data.IsAMatch(keyPressHistoryClone, out var wildcards);
 
             Assert.IsFalse(actual);
         }
@@ -116,7 +117,7 @@ namespace NHotPhrase.WindowsForms.Tests
                 Keys.RControlKey,
             };
             var keyPressHistoryClone = new KeyHistory(8, 8, DateTime.Now, history);
-            var actual = data.IsAMatch(keyPressHistoryClone);
+            var actual = data.IsAMatch(keyPressHistoryClone, out var wildcards);
 
             Assert.IsFalse(actual);
         }
@@ -142,13 +143,13 @@ namespace NHotPhrase.WindowsForms.Tests
                 var simulatedHistoryList = userTyped.ToList();
                 var sequenceList = hotPhraseSequence.ToList();
 
-                VariousSequences_PokingAround(simulatedHistoryList, sequenceList, true);
+                TestSequence(simulatedHistoryList, sequenceList, true);
 
                 simulatedHistoryList.Insert(0, RandomKey(hotPhraseSequence));
-                VariousSequences_PokingAround(simulatedHistoryList, sequenceList, true);
+                TestSequence(simulatedHistoryList, sequenceList, true);
             
                 simulatedHistoryList.Add(RandomKey(hotPhraseSequence));
-                VariousSequences_PokingAround(simulatedHistoryList, sequenceList, false);
+                TestSequence(simulatedHistoryList, sequenceList, false);
             }
         }
 
@@ -166,13 +167,13 @@ namespace NHotPhrase.WindowsForms.Tests
                 var simulatedHistoryList = userTyped.ToList();
                 var sequenceList = hotPhraseSequence.ToList();
 
-                VariousSequences_PokingAround(simulatedHistoryList, sequenceList, false);
+                TestSequence(simulatedHistoryList, sequenceList, false);
             
                 simulatedHistoryList.Insert(0, RandomKey(hotPhraseSequence));
-                VariousSequences_PokingAround(simulatedHistoryList, sequenceList, false);
+                TestSequence(simulatedHistoryList, sequenceList, false);
             
                 simulatedHistoryList.Add(RandomKey(hotPhraseSequence));
-                VariousSequences_PokingAround(simulatedHistoryList, sequenceList, false);
+                TestSequence(simulatedHistoryList, sequenceList, false);
             }
         }
         
@@ -186,21 +187,21 @@ namespace NHotPhrase.WindowsForms.Tests
                 var simulatedHistoryList = sequence.ToList();
                 var sequenceList = sequence.ToList();
 
-                VariousSequences_PokingAround(simulatedHistoryList, sequenceList, true);
+                TestSequence(simulatedHistoryList, sequenceList, true);
 
                 simulatedHistoryList.Insert(0, RandomKey(sequence));
-                VariousSequences_PokingAround(simulatedHistoryList, sequenceList, true);
+                TestSequence(simulatedHistoryList, sequenceList, true);
             
                 simulatedHistoryList.Add(RandomKey(sequence));
-                VariousSequences_PokingAround(simulatedHistoryList, sequenceList, false);
+                TestSequence(simulatedHistoryList, sequenceList, false);
             }
         }
 
-        public static void VariousSequences_PokingAround(List<Keys> simulatedHistory, List<Keys> sequence, bool expected)
+        public static void TestSequence(List<Keys> simulatedHistory, List<Keys> sequence, bool expected)
         {
             var hotPhraseKeySequence = new HotPhraseKeySequence("Fred", sequence.ToArray(), (sender, args) => args.Handled = true);
             var keyHistory = new KeyHistory(8, 8, DateTime.Now, simulatedHistory.ToList());
-            var actual = hotPhraseKeySequence.IsAMatch(keyHistory);
+            var actual = hotPhraseKeySequence.IsAMatch(keyHistory, out var wildcards);
             if (actual && !expected)
             {
                 // Check the last to see if it's a simplified, if so, actual == expected

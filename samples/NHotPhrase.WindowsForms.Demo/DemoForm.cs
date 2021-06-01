@@ -68,14 +68,22 @@ namespace NHotPhrase.WindowsForms.Demo
                     .ThenKeyPressed(Keys.W)
                     .ThenKeyPressed(Keys.R)
                     .ThenKeyPressed(Keys.G)
-                    .ThenCall(OnWriteEmail)
+                    .ThenCall(OnWriteTextFromTextBox)
+            );
+
+            // Write some text plus any wildcards
+            Manager.Keyboard.AddOrReplace(
+                HotPhraseKeySequence
+                    .Named("Write some text and wildcards")
+                    .WhenKeysPressed(Keys.CapsLock, Keys.CapsLock, Keys.N)
+                    .FollowedByWildcards(WildcardMatchType.Digits, 1)
+                    .ThenCall(OnWriteTextWithWildcards)
             );
         }
 
-        private void OnWriteEmail(object? sender, HotPhraseEventArgs e)
+        private void OnWriteTextFromTextBox(object? sender, HotPhraseEventArgs e)
         {
-            SendKeys.SendWait("{BACKSPACE}{BACKSPACE}{BACKSPACE}");
-            Thread.Sleep(2);
+            SendKeysKeyword.SendBackspaces(3);
 
             var textPartsToSend = TextToSend.Text.MakeReadyForSendKeys();
             if (textPartsToSend.Count <= 0) return;
@@ -84,6 +92,28 @@ namespace NHotPhrase.WindowsForms.Demo
             {
                 SendKeys.SendWait(part);
                 Thread.Sleep(2);
+            }
+        }
+
+        public static void OnWriteTextWithWildcards(object? sender, HotPhraseEventArgs e)
+        {
+            if (e.State.MatchResult == null)
+                return;
+
+            var wildcards = e.State.MatchResult.Value;
+            var wildcardsLength = wildcards?.Length ?? 0;
+            if (wildcardsLength == 0) return;
+            
+            SendKeysKeyword.SendBackspaces(2);
+            $"Your wildcard is {wildcards}".SendString();
+            switch (e.State.MatchResult.ValueAsInt())
+            {
+                case 1:
+                    "\n\n\tThis is specific to wildcard 1\n\n".SendString();
+                    break;
+                case 5:
+                    "\n\n\tThis is specific to wildcard 5\n\n\tsomevalue@bold.one\n\n".SendString();
+                    break;
             }
         }
 

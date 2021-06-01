@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Windows.Forms;
 using NHotPhrase.Keyboard;
+using NHotPhrase.Phrase;
 
 namespace NHotPhrase.WindowsForms
 {
@@ -23,14 +24,18 @@ namespace NHotPhrase.WindowsForms
             {
                 Debug.WriteLine($"Key {e.KeyboardData.Key}");
                 History.AddKeyPress(e.KeyboardData.Key);
-                var trigger = Keyboard.Triggers.FirstMatch(History);
+                MatchResult matchResult;
+                var trigger = Keyboard.Triggers.FirstMatch(History, out matchResult);
                 if (trigger == null)
                     return;
 
                 Debug.WriteLine($"Trigger {trigger.Name}");
 
+                if(!string.IsNullOrEmpty(matchResult.Value))
+                    Debug.WriteLine($"  Wilds {matchResult.Value}");
+
                 History.Clear();
-                trigger.Run();
+                trigger.Run(matchResult);
             }
         }
 
