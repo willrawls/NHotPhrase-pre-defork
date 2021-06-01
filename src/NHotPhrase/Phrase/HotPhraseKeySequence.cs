@@ -12,12 +12,9 @@ namespace NHotPhrase.Phrase
 
         public List<Keys> Sequence = new();
         
-        public Wildcard Wildcard { get; set; }
+        public WildcardMatchType WildcardMatchType { get; set; }
         public int WildcardCount { get; set; }
         
-        public int WildcardDigits { get; set; }
-        public string WildcardString { get; set; }
-
         public PhraseActions Actions { get; set; } = new();
 
 
@@ -69,7 +66,25 @@ namespace NHotPhrase.Phrase
             return true;
         }
 
-        public bool IsAMatch(List<Keys> keyList, out string wildcards)
+        public bool IsAMatch(List<Keys> keyList, out int wildcardNumber, int defaultNumber = 0)
+        {
+            var result = IsAMatch(keyList, out string wildcardString);
+            if (!result)
+            {
+                wildcardNumber = defaultNumber;
+            }
+            else if(!int.TryParse(wildcardString, out int wildcardNumberAttempt))
+            {
+                wildcardNumber = defaultNumber;
+            }
+            else
+            {
+                wildcardNumber = wildcardNumberAttempt;
+            }
+            return result;
+        }
+
+        public bool IsAMatch(List<Keys> keyList)
         {
             wildcards = null;
             var sequencePlusWildcardCount = Sequence.Count + WildcardCount;
@@ -95,9 +110,9 @@ namespace NHotPhrase.Phrase
             if (possibleWildcardRange.Count != WildcardCount)
                 return true;
 
-            switch (Wildcard)
+            switch (WildcardMatchType)
             {
-                case Wildcard.Digits:
+                case WildcardMatchType.Digits:
                     if (possibleWildcardRange.OnlyDigits())
                     {
                         WildcardString = possibleWildcardRange.ToString();
@@ -108,7 +123,7 @@ namespace NHotPhrase.Phrase
                         return false;
                     }
                     break;
-                case Wildcard.Letters:
+                case WildcardMatchType.Letters:
                     if (possibleWildcardRange.OnlyLetters())
                     {
                         WildcardString = possibleWildcardRange.ToString();
@@ -119,7 +134,7 @@ namespace NHotPhrase.Phrase
                         return false;
                     }
                     break;
-                case Wildcard.AlphaNumeric:
+                case WildcardMatchType.AlphaNumeric:
                     if (possibleWildcardRange.OnlyLetters()
                         || possibleWildcardRange.OnlyDigits()
                     )
@@ -132,9 +147,9 @@ namespace NHotPhrase.Phrase
                         return false;
                     }
                     break;
-                case Wildcard.Symbols:
+                case WildcardMatchType.Symbols:
                 //    break;
-                case Wildcard.Anything:
+                case WildcardMatchType.Anything:
                     WildcardString = possibleWildcardRange.ToString();
                     break;
             }
@@ -162,21 +177,11 @@ namespace NHotPhrase.Phrase
             return this;
         }
 
-        public HotPhraseKeySequence FollowedByWildcards(Wildcard wildcard, int wildcardCount)
+        public HotPhraseKeySequence FollowedByWildcards(WildcardMatchType wildcardMatchType, int wildcardCount)
         {
-            Wildcard = wildcard;
+            WildcardMatchType = wildcardMatchType;
             WildcardCount = wildcardCount;
             return this;
         }
-    }
-
-    public enum Wildcard
-    {
-        Unknown,
-        Digits,
-        Letters,
-        Symbols,
-        Anything,
-        AlphaNumeric
     }
 }

@@ -8,12 +8,21 @@ namespace NHotPhrase.WindowsForms
     public class TriggerList : List<HotPhraseKeySequence>
     {
         public static readonly object SyncRoot = new();
-        public HotPhraseKeySequence FirstMatch(KeyHistory history)
+        public HotPhraseKeySequence FirstMatch(KeyHistory history, out string wildcards)
         {
             lock (SyncRoot)
             {
                 var cloneOfHistory = history.KeyList();
-                return this.FirstOrDefault(trigger => trigger.IsAMatch(cloneOfHistory));
+                wildcards = null;
+                HotPhraseKeySequence result = null;
+                foreach (var trigger in this)
+                {
+                    if (!trigger.IsAMatch(cloneOfHistory, out wildcards)) continue;
+
+                    result = trigger;
+                    break;
+                }
+                return result;
             }
         }
     }
