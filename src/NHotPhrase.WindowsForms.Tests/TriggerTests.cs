@@ -38,6 +38,24 @@ namespace NHotPhrase.WindowsForms.Tests
         }
 
         [TestMethod]
+        public void ShiftShiftAnySingleDigit_IsAMatch_True()
+        {
+            var data = new HotPhraseKeySequence("Fred",new[] {Keys.Shift, Keys.Shift}, (sender, args) => args.Handled = true)
+                .FollowedByWildcards(Wildcard.Digits, 1);
+
+            var history = new List<Keys>
+            {
+                Keys.LShiftKey,
+                Keys.RShiftKey,
+                Keys.D0,
+            };
+            var keyPressHistoryClone = new KeyHistory(8, 8, DateTime.Now, history);
+            var actual = data.IsAMatch(keyPressHistoryClone);
+
+            Assert.IsTrue(actual);
+        }
+
+        [TestMethod]
         public void Shift3Times3Times_IsAMatch_True()
         {
             var data = new HotPhraseKeySequence("Fred", Shift3Times, (sender, args) => args.Handled = true);

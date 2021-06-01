@@ -7,6 +7,132 @@ namespace NHotPhrase.Keyboard
 {
     public static class Extensions
     {
+        public static bool OnlyLetters(this IList<Keys> keys)
+        {
+            foreach (var key in keys)
+            {
+                var keepGoing = false;
+                switch(key)
+                {
+                    case Keys.A:
+                    case Keys.B:
+                    case Keys.C:
+                    case Keys.D:
+                    case Keys.E:
+                    case Keys.F:
+                    case Keys.G:
+                    case Keys.H:
+                    case Keys.I:
+                    case Keys.J:
+                    case Keys.K:
+                    case Keys.L:
+                    case Keys.M:
+                    case Keys.N:
+                    case Keys.O:
+                    case Keys.P:
+                    case Keys.Q:
+                    case Keys.R:
+                    case Keys.S:
+                    case Keys.T:
+                    case Keys.U:
+                    case Keys.V:
+                    case Keys.W:
+                    case Keys.X:
+                    case Keys.Y:
+                    case Keys.Z:
+                        keepGoing = true;
+                        break;
+                }
+
+                if (!keepGoing)
+                    return false;
+            }
+
+            return true;
+        }
+
+        public static bool OnlyAlphaNumeric(this IList<Keys> keys)
+        {
+            foreach (var key in keys)
+            {
+                var keepGoing = false;
+                switch(key)
+                {
+                    case Keys.A:
+                    case Keys.B:
+                    case Keys.C:
+                    case Keys.D:
+                    case Keys.E:
+                    case Keys.F:
+                    case Keys.G:
+                    case Keys.H:
+                    case Keys.I:
+                    case Keys.J:
+                    case Keys.K:
+                    case Keys.L:
+                    case Keys.M:
+                    case Keys.N:
+                    case Keys.O:
+                    case Keys.P:
+                    case Keys.Q:
+                    case Keys.R:
+                    case Keys.S:
+                    case Keys.T:
+                    case Keys.U:
+                    case Keys.V:
+                    case Keys.W:
+                    case Keys.X:
+                    case Keys.Y:
+                    case Keys.Z:
+                        keepGoing = true;
+                        break;
+                }
+
+                if (!keepGoing)
+                    return false;
+            }
+
+            return true;
+        }
+
+        public static bool OnlyDigits(this IList<Keys> keys)
+        {
+            foreach (var key in keys)
+            {
+                var keepGoing = false;
+                switch(key)
+                {
+                    case Keys.D0:
+                    case Keys.D1:
+                    case Keys.D2:
+                    case Keys.D3:
+                    case Keys.D4:
+                    case Keys.D5:
+                    case Keys.D6:
+                    case Keys.D7:
+                    case Keys.D8:
+                    case Keys.D9:
+                    case Keys.NumPad0:
+                    case Keys.NumPad1:
+                    case Keys.NumPad2:
+                    case Keys.NumPad3:
+                    case Keys.NumPad4:
+                    case Keys.NumPad5:
+                    case Keys.NumPad6:
+                    case Keys.NumPad7:
+                    case Keys.NumPad8:
+                    case Keys.NumPad9:
+                        keepGoing = true;
+                        break;
+                }
+
+                if (!keepGoing)
+                    return false;
+            }
+
+            return true;
+        }
+
         public static List<string> MakeReadyForSendKeys(this string target, int splitLength = 8)
         {
             if (string.IsNullOrEmpty(target))

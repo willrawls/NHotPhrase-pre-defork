@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using NHotPhrase.Keyboard;
 
@@ -7,9 +8,18 @@ namespace NHotPhrase.Phrase
 {
     public class HotPhraseKeySequence
     {
-        public List<Keys> Sequence = new();
         public string Name { get; set; }
+
+        public List<Keys> Sequence = new();
+        
+        public Wildcard Wildcard { get; set; }
+        public int WildcardCount { get; set; }
+        
+        public int WildcardDigits { get; set; }
+        public string WildcardString { get; set; }
+
         public PhraseActions Actions { get; set; } = new();
+
 
         public HotPhraseKeySequence(string name, Keys[] keys, EventHandler<HotPhraseEventArgs> hotPhraseEventArgs)
         {
@@ -59,19 +69,74 @@ namespace NHotPhrase.Phrase
             return true;
         }
 
-        public bool IsAMatch(List<Keys> keyList)
+        public bool IsAMatch(List<Keys> keyList, out string wildcards)
         {
-            if (keyList.Count < Sequence.Count)
+            wildcards = null;
+            var sequencePlusWildcardCount = Sequence.Count + WildcardCount;
+            if (keyList.Count < sequencePlusWildcardCount)
                 return false;
 
-            var possibleMatchRange = keyList.Count == Sequence.Count
+            var possibleMatchRange = keyList.Count == sequencePlusWildcardCount
                 ? keyList
-                : keyList.GetRange(keyList.Count - Sequence.Count, Sequence.Count);
+                : keyList.GetRange(keyList.Count - sequencePlusWildcardCount, sequencePlusWildcardCount);
 
             for (var i = 0; i < Sequence.Count; i++)
             {
                 if (!SendKeysKeyword.IsAMatch(Sequence[i], possibleMatchRange[i]))
                     return false;
+            }
+
+            if (WildcardCount <= 0) return true;
+
+            var possibleWildcardRange = keyList.Count == sequencePlusWildcardCount
+                ? keyList
+                : keyList.GetRange(keyList.Count - WildcardCount, WildcardCount);
+
+            if (possibleWildcardRange.Count != WildcardCount)
+                return true;
+
+            switch (Wildcard)
+            {
+                case Wildcard.Digits:
+                    if (possibleWildcardRange.OnlyDigits())
+                    {
+                        WildcardString = possibleWildcardRange.ToString();
+                        WildcardDigits = int.Parse(WildcardString);
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                    break;
+                case Wildcard.Letters:
+                    if (possibleWildcardRange.OnlyLetters())
+                    {
+                        WildcardString = possibleWildcardRange.ToString();
+                        WildcardDigits = 0;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                    break;
+                case Wildcard.AlphaNumeric:
+                    if (possibleWildcardRange.OnlyLetters()
+                        || possibleWildcardRange.OnlyDigits()
+                    )
+                    {
+                        WildcardString = possibleWildcardRange.ToString();
+                        WildcardDigits = 0;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                    break;
+                case Wildcard.Symbols:
+                //    break;
+                case Wildcard.Anything:
+                    WildcardString = possibleWildcardRange.ToString();
+                    break;
             }
 
             return true;
@@ -96,5 +161,22 @@ namespace NHotPhrase.Phrase
             Sequence.Add(key);
             return this;
         }
+
+        public HotPhraseKeySequence FollowedByWildcards(Wildcard wildcard, int wildcardCount)
+        {
+            Wildcard = wildcard;
+            WildcardCount = wildcardCount;
+            return this;
+        }
+    }
+
+    public enum Wildcard
+    {
+        Unknown,
+        Digits,
+        Letters,
+        Symbols,
+        Anything,
+        AlphaNumeric
     }
 }
